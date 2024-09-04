@@ -1,0 +1,67 @@
+name: salamah
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment: 
+  sdk: '>=3.3.4 <4.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.6
+  get: 4.6.6
+  sizer: ^3.0.3
+  permission_handler: ^11.3.1
+  fluttertoast: ^8.2.8
+  image_cropper: ^8.0.1
+  image_picker: ^1.1.2
+  dio: ^4.0.4
+  dio_log: ^2.0.2
+  path_provider: ^2.1.4
+  shared_preferences: ^2.2.3
+  firebase_auth: ^5.2.0
+  cloud_firestore: ^5.4.0
+  firebase_database: ^11.1.1
+  simple_fontellico_progress_dialog: ^0.3.0
+  flutter: 
+    sdk: flutter
+
+dev_dependencies: 
+  flutter_lints: 4.0.0
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  uses-material-design: true
+
+  assets:
+    - assets/fonts/
+
+
+  fonts:
+    - family: Urbanist
+      fonts:
+        - asset: assets/fonts/Urbanist-Regular.ttf
+    #         - asset: fonts/Schyler-Italic.ttf
+    - family: Urbanist-700
+      fonts:
+        - asset: assets/fonts/Urbanist-Bold.ttf
+    - family: Urbanist-800
+      fonts:
+        - asset: assets/fonts/Urbanist-ExtraBold.ttf
+    - family: Urbanist-600
+      fonts:
+        - asset: assets/fonts/Urbanist-Medium.ttf
+    - family: Urbanist-500
+      fonts:
+        - asset: assets/fonts/Urbanist-Regular.ttf
+    - family: Urbanist-400
+      fonts:
+        - asset: assets/fonts/Urbanist-Light.ttf
+    - family: Urbanist-300
+      fonts:
+        - asset: assets/fonts/Urbanist-Light.ttf
+    - family: Urbanist-200
+      fonts:
+        - asset: assets/fonts/Urbanist-ExtraLight.ttf
+    - family: Urbanist-100
+      fonts:
+        - asset: assets/fonts/Urbanist-Thin.ttf

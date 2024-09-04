@@ -1,0 +1,30 @@
+class ApiEndPoints{
+  static  String get baseUrl => "http://13.60.77.117:8000/api/";
+  static  String get base => "http://13.60.77.117:8000/";
+  // static  String get baseUrl => "https://b130-39-50-171-222.ngrok-free.app/api/";
+  static  String get register => "register/";
+  static  String get login => "login/";
+  static  String get preferences => "get-all-preferences/";
+  static  String get verifyOtp => "verify-otp/";
+  static  String get verifyOtpByPhone => "verify-otp-by-phone/";
+  static  String get otpResend => "resend-otp/";
+  static  String get createPin => "set-pin/";
+  static  String get getPin => "get-pin/";
+  static  String get changePin => "change-pin/";
+  static  String get skillLevel => "skill-levels/";
+  static  String get tools => "tools/";
+  static  String get profile => "profile/";
+  static  String get createProfile => "profile/create/";
+  static  String get deleteProfile => "profile/delete/";
+  static  String get preferredRetailers => "preferred-retailers/";
+  static  String get paintFinishes => "paint-finishes/";
+  static  String get hobbies => "hobbies/";
+  static  String get equipment => "equipment/";
+  static  String get verifyToken => "token/verify/";
+  static  String get userPreferences => "user-brands/";
+  static  String get forgotPin => "send-otp-by-phone/";
+  static  String get getCategorizedTools => "tools-with-category";
+  static  String get getFeaturedTools => "featured-tools/";
+  static  String get getInspirations => "inspirations/";
+  static  String get getProjects => "get-projects/";
+}
