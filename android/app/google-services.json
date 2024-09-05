@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "187346416545",
+    "project_id": "salama-ad405",
+    "storage_bucket": "salama-ad405.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187346416545:android:28e7c8469ffb60bfc691e0",
+        "android_client_info": {
+          "package_name": "com.salamah.app.salamah"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB68OkU94ATI3ygvWfQ7Pb_UrbK_TfDeXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
