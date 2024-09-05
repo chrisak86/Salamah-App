@@ -12,10 +12,10 @@ import '../config/app_colors.dart';
 
 class Utils {
   static String getImagePath(String name, {String format= 'png'}) {
-    return 'assets/pngImages/$name.$format';
+    return 'assets/images/$name.$format';
   }
   static String getIconPath(String name, {String format= 'png'}) {
-    return 'assets/pngs/$name.$format';
+    return 'assets/icons/$name.$format';
   }
   static String getSvgPath(String name, {String format= 'svg'}) {
     return 'assets/svgIcons/$name.$format';
