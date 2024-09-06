@@ -129,7 +129,7 @@ class Utils {
       uiSettings:[ AndroidUiSettings(
           toolbarTitle: 'Refine Image',
           toolbarColor: AppColors.secondary,
-          toolbarWidgetColor:AppColors.white,
+          toolbarWidgetColor:AppColors.kWhite,
           initAspectRatio: CropAspectRatioPreset.original,
           activeControlsWidgetColor: AppColors.secondary,
           backgroundColor: AppColors.secondary,

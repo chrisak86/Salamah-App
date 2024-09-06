@@ -1,18 +1,18 @@
 
-import 'package:dio_log/dio_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../config/app_colors.dart';
-import '../config/app_text_styles.dart';
+import 'package:salamah/app/config/app_colors.dart';
+import 'package:salamah/app/config/app_font.dart';
+import 'package:sizer/sizer.dart';
 
 class CustomButton extends StatefulWidget {
   final String text;
-  final Color? clr;
-  final Color? txtClr;
-  final Widget? child;
   final Function()? onPress;
-   CustomButton({super.key,required this.text, required this.onPress, this.clr, this.txtClr,this.child});
+  final double? height;
+  final double? width;
+  final Color textColor;
+  final Color boxColor;
+  const CustomButton({super.key,this.width,this.height ,required this.text, required this.onPress, required this.textColor, required this.boxColor});
 
   @override
   State<CustomButton> createState() => _CustomButtonState();
@@ -21,58 +21,18 @@ class CustomButton extends StatefulWidget {
 class _CustomButtonState extends State<CustomButton> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap:widget.onPress,
       child: Container(
-        width: double.infinity,
-        // width: MediaQuery.of(context).size.width * 0.8,
-        height: Get.height/16.3,
+        width:widget.width ?? double.infinity,
+        height:widget.height ?? Get.height/14.5,
         decoration: BoxDecoration(
-        color:widget.clr ?? AppColors.tertiaryOrange,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Center(child:widget.child?? Text(widget.text, style: AppTextStyles.semiBold.copyWith(color:widget.txtClr?? AppColors.white),)),
-      ),
-    );
-  }
-}
-
-
-
-
-
-class CustomGradientButton extends StatefulWidget {
-  final String text;
-  final Widget? child;
-  final Function()? onPress;
-  CustomGradientButton({super.key,required this.text, required this.onPress,this.child});
-
-  @override
-  State<CustomGradientButton> createState() => _CustomGradientButtonState();
-}
-
-class _CustomGradientButtonState extends State<CustomGradientButton> {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap:widget.onPress,
-      onLongPress: (){
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => HttpLogListWidget(),
-          ),
-        );
-      },
-      child: Container(
-        width: double.infinity,
-        // width: MediaQuery.of(context).size.width * 0.8,
-        height: Get.height/16.3,
-        decoration: BoxDecoration(
-          gradient: AppColors.primaryGradient,
-        // color: AppColors.tertiaryOrange,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Center(child:widget.child?? Text(widget.text, style: AppTextStyles.semiBold.copyWith(color: AppColors.white),)),
+          color: widget.boxColor,
+          border: Border.all(color: AppColors.secondary),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Center(child: Text(widget.text,
+            style: TextStyle(fontWeight:FontWeight.bold,fontSize:10.sp,color: widget.textColor,fontFamily: AppFonts.urban700))),
       ),
     );
   }

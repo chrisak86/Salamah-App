@@ -34,7 +34,7 @@ class AppTextStyles {
   static const TextStyle bodyText = TextStyle(
   fontSize: 16,
   fontFamily: 'Urbanist-400',
-  color: AppColors.white, overflow: TextOverflow.ellipsis
+  color: AppColors.kWhite, overflow: TextOverflow.ellipsis
   );
   static const TextStyle bodyTextBold = TextStyle(
   fontSize: 16,
@@ -60,22 +60,10 @@ class AppTextStyles {
   color: AppColors.black,
       overflow: TextOverflow.ellipsis
   );
-  static const TextStyle hintText = TextStyle(
-  fontSize: 14,
-  fontFamily: 'Urbanist-400',
-  color: AppColors.hintColor,
-      overflow: TextOverflow.ellipsis
-  );
   static  TextStyle normalText =const TextStyle(
   fontSize: 14,
   fontFamily: 'Urbanist-400',
   color: AppColors.black,
-      overflow: TextOverflow.ellipsis
-  );
-  static  TextStyle small = TextStyle(
-  fontSize: 9.sp,
-  fontFamily: 'Urbanist-500',
-  color: AppColors.white,
       overflow: TextOverflow.ellipsis
   );
 

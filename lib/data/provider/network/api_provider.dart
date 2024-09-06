@@ -33,12 +33,11 @@ class APIProvider {
       Response response;
       if (auth == null || auth == true) {
         log(fullUrl ?? (ApiEndPoints.baseUrl + url));
-        log(
-            "[APIProvider.baseGetAPI Authed] called with : ${Globals.authToken}");
+        //log("[APIProvider.baseGetAPI Authed] called with : ${Globals.authToken}");
         response = await _client.get(fullUrl ?? (ApiEndPoints.baseUrl + url),
             options: Options(headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
-               'authorization': "Bearer ${Globals.authToken}"
+            //   'authorization': "Bearer ${Globals.authToken}"
             }),
           // queryParameters: query as Map<String, dynamic>
         );
@@ -69,12 +68,11 @@ class APIProvider {
       Response response;
       if (auth == null || auth == true) {
         log(fullUrl ?? (ApiEndPoints.baseUrl + url));
-        log(
-            "[APIProvider.baseGetAPI Authed] called with : ${Globals.authToken}");
+       // log("[APIProvider.baseGetAPI Authed] called with : ${Globals.authToken}");
         response = await _client.get(fullUrl ?? (ApiEndPoints.baseUrl + url),
             options: Options(headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
-              'authorization': "Bearer ${Globals.authToken}"
+            //  'authorization': "Bearer ${Globals.authToken}"
             }));
       } else {
         log(fullUrl ?? (ApiEndPoints.baseUrl + url));
@@ -118,12 +116,12 @@ class APIProvider {
         log(fullUrl ?? (ApiEndPoints.baseUrl + url));
         log(jsonEncode(body));
         log("auth true");
-        log("auth token...${Globals.authToken}");
+       // log("auth token...${Globals.authToken}");
         response = await _client.post(fullUrl ?? (ApiEndPoints.baseUrl + url),
             data: body,
             options: Options(headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
-               'authorization': "Bearer ${Globals.authToken}",
+         //      'authorization': "Bearer ${Globals.authToken}",
             }));
       } else {
         log(fullUrl ?? (ApiEndPoints.baseUrl + url));
@@ -221,7 +219,7 @@ class APIProvider {
             data: body,
             options: Options(headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
-              'authorization': "Bearer ${Globals.authToken}"
+             // 'authorization': "Bearer ${Globals.authToken}"
             }));
       } else {
         log(fullUrl ?? (ApiEndPoints.baseUrl + url));
@@ -268,7 +266,7 @@ class APIProvider {
             data: body,
             options: Options(headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
-              'authorization': "Bearer ${Globals.authToken}"
+           //   'authorization': "Bearer ${Globals.authToken}"
             }));
       } else {
         log(ApiEndPoints.baseUrl + url);
@@ -313,8 +311,7 @@ class APIProvider {
     String fileName = file.path.split("/").last;
     try {
       FormData? formData;
-      _client.options.headers
-          .addAll({"authorization": "Bearer ${Globals.authToken}"});
+    //  _client.options.headers.addAll({"authorization": "Bearer ${Globals.authToken}"});
       Response response;
       formData = FormData.fromMap({
         "avatar": await MultipartFile.fromFile(file.path,
@@ -367,8 +364,7 @@ class APIProvider {
         message: 'Loading...',
         type: SimpleFontelicoProgressDialogType.normal);
     String storeName = storeLogo.path.split("/").last;
-    _client.options.headers
-        .addAll({"authorization": "Bearer ${Globals.authToken}"});
+    //_client.options.headers.addAll({"authorization": "Bearer ${Globals.authToken}"});
     try {
       var formData = FormData.fromMap({
         ...body,
@@ -418,8 +414,7 @@ class APIProvider {
         message: 'Loading...',
         type: SimpleFontelicoProgressDialogType.normal);
     String storeName = storeLogo.path.split("/").last;
-    _client.options.headers
-        .addAll({"authorization": "Bearer ${Globals.authToken}"});
+    //_client.options.headers.addAll({"authorization": "Bearer ${Globals.authToken}"});
     try {
       var formData = FormData.fromMap({
         ...body,

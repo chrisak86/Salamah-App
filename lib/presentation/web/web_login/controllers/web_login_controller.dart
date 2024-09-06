@@ -1,23 +1,26 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class WebLoginController extends GetxController {
-  //TODO: Implement WebLoginController
 
-  final count = 0.obs;
+  final formKey = GlobalKey<FormState>();
+  TextEditingController emailController=TextEditingController();
+  TextEditingController passController=TextEditingController();
+
   @override
   void onInit() {
     super.onInit();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
+  void showErrorMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
-  void increment() => count.value++;
 }

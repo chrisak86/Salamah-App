@@ -1,24 +1,24 @@
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import '../config/app_colors.dart';
-import '../config/app_text_styles.dart';
-
-
+import 'package:salamah/app/config/app_colors.dart';
+import 'package:salamah/app/config/app_font.dart';
+import 'package:sizer/sizer.dart';
 class InputTextField extends StatefulWidget {
-  final String hint;
+  final String? hint;
+  final String? label;
   final String? errorText;
-  final bool readOnly;
-  final bool? isError;
-  final Color? clr;
-  final int? lines;
-  final int? length;
-  final List<TextInputFormatter>? inputFormatters;
-  final TextInputType keyboardType;
-  final TextEditingController ctrl;
-  final FormFieldValidator<String>? validator;
-  final FormFieldValidator<String>? onChange;
-   InputTextField( {required this.hint,this.inputFormatters ,required this.ctrl, this.validator, required this.keyboardType, required this.readOnly, this.onChange, this.clr, this.lines, this.length, this.errorText, this.isError,});
+  final FocusNode? focusNode;
+  final Icon? pre;
+  final bool? fromLogin;
+  final bool? errorEnabled;
+  final int?   maxLines;
+  final double? height;
+  final TextInputType? textInputType;
+  final TextEditingController? controller;
+  final String? Function(String?)? validation;
+  final String? Function(String?)? onchange;
+  final String? Function(String?)? onSaved;
+  const InputTextField( {super.key,this.maxLines,this.height ,this.errorText ,this.focusNode,this.fromLogin=false ,this.hint,  this.textInputType ,this.onSaved,  this.controller,this.label, this.validation, this.onchange, this.pre,this.errorEnabled=false});
 
   @override
   State<InputTextField> createState() => _InputTextFieldState();
@@ -28,121 +28,154 @@ class _InputTextFieldState extends State<InputTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      maxLength:widget.length ,
-      onChanged: widget.onChange,
-      readOnly:widget.readOnly ,
-      controller:widget.ctrl ,
-      inputFormatters: widget.inputFormatters ?? [],
-    keyboardType:widget.keyboardType ,
-    validator:widget.validator ,
-    cursorColor:AppColors.primary ,
-    maxLines: widget.lines,
-    decoration: InputDecoration(
-      hintText: widget.hint ,
-      counterText: '',
-      errorText:widget.errorText,
-      contentPadding:const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-      fillColor:widget.clr ?? AppColors.trans,
-      filled: true,
-      enabledBorder: OutlineInputBorder(borderSide:const BorderSide(color:AppColors.white,width: 1),
-          borderRadius: BorderRadius.circular(8)),
-      hintStyle:const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: AppColors.hintColor),
-    focusedBorder: OutlineInputBorder( borderSide:const BorderSide(color:AppColors.primary,width: 1),
-        borderRadius: BorderRadius.circular(8)),
-      focusedErrorBorder: OutlineInputBorder( borderSide:const BorderSide(color:AppColors.primary,width: 1),
-        borderRadius: BorderRadius.circular(8)),
-      errorBorder: OutlineInputBorder( borderSide:const BorderSide(color:AppColors.red,width: 1),
-          borderRadius: BorderRadius.circular(8)),
-    ),
+      keyboardType: widget.textInputType??  TextInputType.text,
+      validator: widget.validation,
+      onSaved: widget.onSaved,
+      focusNode: widget.focusNode,
+      onChanged: widget.onchange,
+      controller: widget.controller,
+      cursorColor: AppColors.secondary,
+      maxLines: widget.maxLines ??  1,
+      style:  TextStyle(color: AppColors.black,fontSize: 12.sp),
+      decoration: InputDecoration(
+          errorText: widget.errorEnabled==true ? widget.errorText : null,
+          contentPadding: const EdgeInsets.symmetric(vertical: 6,horizontal: 20),
+          labelText: widget.label,
+          prefixIcon: widget.pre,
+          labelStyle:  TextStyle(fontFamily: AppFonts.urban700, color: AppColors.black,fontSize: 10.sp,fontWeight: FontWeight.w500),
+          hintText: widget.hint ,
+          filled: true,
+          fillColor: AppColors.lightGrey.withOpacity(0.5),
+          errorBorder: widget.errorEnabled==true ? OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.errorColor)) :
+          OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.pinColor)),
+          focusedBorder:  OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.pinColor)),
+          hintStyle:  TextStyle(fontSize: 12.sp,fontWeight: FontWeight.w400,color: AppColors.lightGrey,fontFamily: AppFonts.urban700),
+          focusedErrorBorder: OutlineInputBorder(
+
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.pinColor)),
+          enabledBorder:  OutlineInputBorder(
+              borderRadius:BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.pinColor))),
     );
   }
 }
 
-class InputPasswordField extends StatefulWidget {
-  final String hint;
-  final bool readOnly;
-  final bool obSecure;
-  final List<TextInputFormatter>? inputFormatters;
-  final IconButton eye;
-  final TextInputType keyboardType;
-  final TextEditingController ctrl;
-  final FormFieldValidator<String>? validator;
-  final FormFieldValidator<String>? onChange;
- const InputPasswordField( {super.key,this.inputFormatters, required this.hint, required this.ctrl, this.validator, required this.keyboardType, required this.readOnly, this.onChange, required this.eye, required this.obSecure,});
+
+
+
+class PasswordTextField extends StatefulWidget {
+  final String? hint;
+  final String? label;
+  final Widget? suffixIcon;
+  final bool isObscure;
+  final bool passError;
+  final TextEditingController? controller;
+  final String? Function(String?)? validation;
+  final String? Function(String?)? onchange;
+  final String? Function(String?)? onSave;
+  const PasswordTextField( {super.key,this.suffixIcon, this.isObscure=false,this.passError=false, this.hint, this.controller,this.onSave,this.label, this.validation, this.onchange});
 
   @override
-  State<InputPasswordField> createState() => _InputPasswordFieldState();
+  State<PasswordTextField> createState() => _PasswordTextFieldState();
 }
 
-class _InputPasswordFieldState extends State<InputPasswordField> {
+class _PasswordTextFieldState extends State<PasswordTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      obscureText: widget.obSecure,
-      onChanged: widget.onChange,
-      readOnly:widget.readOnly ,
-      controller:widget.ctrl ,
-    inputFormatters: widget.inputFormatters,
-    keyboardType:widget.keyboardType ,
-    validator:widget.validator ,
-    cursorColor:AppColors.primary ,
-    decoration: InputDecoration(
-      suffixIcon: widget.eye,
-      hintText: widget.hint ,
-      contentPadding:const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-      fillColor: AppColors.white,
-      filled: false,
-      enabledBorder: OutlineInputBorder(borderSide:const BorderSide(color:AppColors.white,width: 1),
-          borderRadius: BorderRadius.circular(8)),
-      errorBorder: OutlineInputBorder(borderSide:const BorderSide(color:AppColors.red,width: 1),
-          borderRadius: BorderRadius.circular(8)),
-      hintStyle: AppTextStyles.hintText,
-    errorStyle:const TextStyle(color: AppColors.red),
-        focusedErrorBorder: OutlineInputBorder( borderSide:const BorderSide(color:AppColors.primary,width: 1),
-        borderRadius: BorderRadius.circular(8)),
+      validator: widget.validation,
+      onChanged: widget.onchange,
+      controller: widget.controller,
+      obscureText: widget.isObscure,
+      onSaved: widget.onSave,
+      style:  TextStyle(color: AppColors.black,fontSize: 10.sp),
+      decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 6,horizontal: 20),
+          labelText: widget.label,
+          labelStyle:  TextStyle(fontFamily: AppFonts.urban700, color: AppColors.black,fontSize: 10.sp,fontWeight: FontWeight.w500),
+          hintText: widget.hint,
+          suffixIcon:widget.suffixIcon,
+          filled: true,
+          fillColor: AppColors.lightGrey.withOpacity(0.5),
+          errorBorder: widget.passError==true ? OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.errorColor)) :
+          OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.pinColor)),
+          focusedBorder:  OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.pinColor)),
+          hintStyle:  TextStyle(fontSize: 12.sp,fontWeight: FontWeight.w400,color: AppColors.lightGrey,fontFamily: AppFonts.urban700),
+          focusedErrorBorder: OutlineInputBorder(
 
-    focusedBorder: OutlineInputBorder( borderSide:const BorderSide(color:AppColors.primary,width: 1),
-        borderRadius: BorderRadius.circular(8))
-    ),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.pinColor)),
+          enabledBorder:  OutlineInputBorder(
+              borderRadius:BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.pinColor))),
     );
   }
 }
 
 
-class DropdownInput extends StatelessWidget {
-  final String hint;
-  final Color? clr;
-  final String value;
-  final List<String> list;
-  final void Function(String?)? onChanged;
-  const DropdownInput({super.key, required this.hint, required this.list, required this.value, this.onChanged, this.clr});
+class SearchTextField extends StatefulWidget {
+  final String? hint;
+  final String? label;
+  final Widget? pre;
+  final bool isEnabled;
+  final Color? fillColor;
+  final TextEditingController controller;
+  final String? Function(String?)? validation;
+  final String? Function(String?)? onchange;
+  const SearchTextField( {super.key,this.isEnabled=true ,this.fillColor=AppColors.pinColor ,this.hint,required this.controller,this.label, this.validation, this.onchange, this.pre});
+
+  @override
+  State<SearchTextField> createState() => _SearchTextFieldState();
+}
+
+class _SearchTextFieldState extends State<SearchTextField> {
   @override
   Widget build(BuildContext context) {
-
-    return DropdownButtonFormField(
-      value:value ,
-      items:list.map((option) {
-        return DropdownMenuItem(
-          value: option,
-          child: Text(option),
-        );
-      }).toList(),
-      onChanged: onChanged,
-      icon:const Icon(Icons.keyboard_arrow_down,color: AppColors.grey,),
-      style:const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: AppColors.hintColor),
+    return TextFormField(
+      enabled: widget.isEnabled,
+      cursorColor: AppColors.secondary,
+      validator: widget.validation,
+      onChanged: widget.onchange,
+      controller: widget.controller,
       decoration: InputDecoration(
-          hintText: hint ,
-          contentPadding:const EdgeInsets.symmetric(vertical: 10,horizontal: 10),
-          fillColor:clr ?? AppColors.white,
+          contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+          labelText: widget.label,
+          prefixIcon:  const Padding(
+            padding:EdgeInsets.only(left: 14),
+            child: Icon(CupertinoIcons.search,color: AppColors.secondary,size: 24),
+          ),
+          fillColor: widget.fillColor,
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 50,
+            minHeight: 50,
+          ),
           filled: true,
-          hintStyle: AppTextStyles.hintText,
+          labelStyle:  TextStyle(color: AppColors.lightGrey,fontSize: 9.sp,fontWeight:FontWeight.w400),
+          hintText: widget.hint ,
+          // focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1,color: AppColors.button)),
+          hintStyle: const TextStyle(fontSize: 14,fontWeight: FontWeight.w400,color: AppColors.lightGrey),
+          disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.pinColor)),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.pinColor)),
           enabledBorder: OutlineInputBorder(
-              borderSide:const BorderSide(color:AppColors.white,width: 1),
-              borderRadius: BorderRadius.circular(8)),
-          focusedBorder: OutlineInputBorder( borderSide:const BorderSide(color:AppColors.primary,width: 1),
-              borderRadius: BorderRadius.circular(8))
-      ),
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(width: 1,color: AppColors.pinColor))),
     );
   }
 }
-
