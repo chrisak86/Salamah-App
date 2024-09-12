@@ -70,7 +70,7 @@ class RequestsView extends GetView<RequestsController> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       MyText(
-                                        title: "ID :  ${ticket.user_id}",
+                                        title: "ID :  ${ticket.id}",
                                         clr: AppColors.kWhite,
                                       ),
                                       MyText(
