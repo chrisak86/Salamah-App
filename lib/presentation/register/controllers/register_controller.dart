@@ -3,13 +3,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:salamah/app/config/app_colors.dart';
+import 'package:salamah/app/models/user.dart';
 import 'package:salamah/app/shared_widgets/custom_dilague.dart';
 import 'package:salamah/app/utils/utils.dart';
+import 'package:salamah/data/repositories/profile_repository.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
 class RegisterController extends GetxController {
 
 
+  RequestRepository requestRepository=RequestRepository();
   final auth = FirebaseAuth.instance;
   final fireStore = FirebaseFirestore.instance;
   TextEditingController firstNameController=TextEditingController();
@@ -59,50 +62,38 @@ class RegisterController extends GetxController {
 
   Future<void> signUp() async {
     SimpleFontelicoProgressDialog dialog = SimpleFontelicoProgressDialog(context: Get.context!);
-    dialog.show(
-        indicatorColor: AppColors.primary,
-        message: 'Loading...',
-        type: SimpleFontelicoProgressDialogType.normal);
+    dialog.show(indicatorColor: AppColors.primary, message: 'Loading...', type: SimpleFontelicoProgressDialogType.normal);
+    var response;
     try {
-      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password:  passwordController.text,
+      response = await requestRepository.registerUser(
+        UserProfile(
+          name: firstNameController.text,
+          civilId:  lastNameController.text,
+          email: emailController.text,
+          password: passwordController.text,
+          gender: isFemale.isTrue ? "FEMALE" : "MALE",
+          type: isPolice.isTrue ? "POLICE" : "USER",
+          isApproved: false,
+          isOnline: false
+        )
       );
-      if(isPolice.isTrue){
-        await fireStore.collection('police').doc(userCredential.user!.uid).set({
-          'user_id':userCredential.user!.uid,
-          'name': firstNameController.text,
-          'civilId': lastNameController.text,
-          'email': emailController.text,
-          "gender": isFemale.isTrue ? "FEMALE" : "MALE",
-          "type":"POLICE",
-          "isOnline" :false,
-          "isApproved":false
-        });
-      }
-      else{
-        await fireStore.collection('users').doc(userCredential.user!.uid).set({
-          'user_id':userCredential.user!.uid,
-          'name': firstNameController.text,
-          'civilId': lastNameController.text,
-          'email': emailController.text,
-          "gender": isFemale.isTrue ? "FEMALE" : "MALE",
-          "type": "USER"
-        });
-      }
-      await userCredential.user!.sendEmailVerification();
-      dialog.hide();
-      successDialgue();
-    } on FirebaseAuthException catch (e) {
-      if (e.code == "email-already-in-use") {
+      if (response != null && response['status']==true) {
         dialog.hide();
-        userAlreadyExist();
-      } else{
+        Utils.showToast(message: "User Created");
+        Get.back();
+        update();
+      }else if(response != null && response['success']==false ){
         dialog.hide();
-        Utils.showToast(message: e.code);
+        Utils.showToast(message: response['message']);
+        update();
+      }else{
+        dialog.hide();
+        Utils.showToast(message: response['message']);
+        update();
       }
-    }finally{
+    } on Exception catch (e) {
       dialog.hide();
+      Get.log('Sign Up ${e.toString()}');
     }
   }
 

@@ -3,8 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../config/app_colors.dart';
@@ -67,25 +65,7 @@ class Utils {
     return regExp.hasMatch(value);
   }
 
-  static Future getImageFromGallery() async {
-    final file = await ImagePicker.platform.pickImage(source: ImageSource.gallery);
-    if (file != null) {
-      File? returnFile = await refineImage(File(file.path));
-      Get.log('${DateTime.now()} [RefineImage.getImageFromGallery] $returnFile');
-      return returnFile;
-    }
-  }
 
-  static Future getImageFromCamera() async {
-    final pickedFile =
-    await ImagePicker.platform.pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      File? returnFile = await refineImage(File(pickedFile.path));
-      Get.log(
-          '${DateTime.now()} [RefineImage.getImageFromGallery] $returnFile');
-      return returnFile;
-    }
-  }
 
 
  // static bool validatePhoneNumber(String phoneNumber, String isoCode)  {
@@ -99,54 +79,6 @@ class Utils {
 
 
 
-  static Future<File?> refineImage(File pickedFile) async {
-    // final tempDir = await getTemporaryDirectory();
-
-    File toCompress = pickedFile;
-
-    print(toCompress.path);
-
-    CroppedFile? croppedFile = await ImageCropper.platform.cropImage(
-      sourcePath: toCompress.path,aspectRatio: CropAspectRatio(ratioX: 9, ratioY: 16),
-      // aspectRatioPresets: Platform.isAndroid
-      //     ? [
-      //   CropAspectRatioPreset.square,
-      //   CropAspectRatioPreset.ratio3x2,
-      //   CropAspectRatioPreset.original,
-      //   CropAspectRatioPreset.ratio4x3,
-      //   CropAspectRatioPreset.ratio16x9
-      // ]
-      //     : [
-      //   CropAspectRatioPreset.original,
-      //   CropAspectRatioPreset.square,
-      //   CropAspectRatioPreset.ratio3x2,
-      //   CropAspectRatioPreset.ratio4x3,
-      //   CropAspectRatioPreset.ratio5x3,
-      //   CropAspectRatioPreset.ratio5x4,
-      //   CropAspectRatioPreset.ratio7x5,
-      //   CropAspectRatioPreset.ratio16x9
-      // ],
-      uiSettings:[ AndroidUiSettings(
-          toolbarTitle: 'Refine Image',
-          toolbarColor: AppColors.secondary,
-          toolbarWidgetColor:AppColors.kWhite,
-          initAspectRatio: CropAspectRatioPreset.original,
-          activeControlsWidgetColor: AppColors.secondary,
-          backgroundColor: AppColors.secondary,
-          statusBarColor: AppColors.secondary,
-          lockAspectRatio: false), IOSUiSettings(
-        title: 'Refine Image',
-
-      )],
-    );
-
-    if (croppedFile != null) {
-      pickedFile = File(croppedFile.path);
-      return pickedFile;
-    }else{
-      return null;
-    }
-  }
   static double calculateDistance(lat1, lon1, lat2, lon2) {
     var p = 0.017453292519943295;
     var c = cos;

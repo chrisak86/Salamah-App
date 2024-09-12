@@ -12,6 +12,7 @@ import 'package:salamah/app/routes/app_pages.dart';
 import 'package:salamah/app/shared_widgets/custom_dilague.dart';
 import 'package:salamah/app/utils/utils.dart';
 import 'package:salamah/data/provider/local_storage/local_db.dart';
+import 'package:salamah/data/repositories/profile_repository.dart';
 import 'package:salamah/presentation/police/requests/views/pending.dart';
 import 'package:simple_fontellico_progress_dialog/simple_fontico_loading.dart';
 
@@ -19,6 +20,7 @@ class LoginController extends GetxController {
   final fireStore = FirebaseFirestore.instance;
   TextEditingController emailController=TextEditingController();
   TextEditingController passwordController=TextEditingController();
+  RequestRepository requestRepository =RequestRepository();
   RxBool showPassword=true.obs;
   RxBool isPolice=false.obs;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -47,78 +49,44 @@ class LoginController extends GetxController {
 
   login() async {
     SimpleFontelicoProgressDialog dialog = SimpleFontelicoProgressDialog(context: Get.context!);
+    dialog.show(indicatorColor: AppColors.primary, message: 'Loading...', type: SimpleFontelicoProgressDialogType.normal);
+    var response;
     try {
-      dialog.show(
-          indicatorColor: AppColors.secondary,
-          message: 'Loading...',
-          type: SimpleFontelicoProgressDialogType.normal);
-      final userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+      response = await requestRepository.login(
+          email: emailController.text.replaceAll(" ", ""),
+          pass: passwordController.text
       );
-      var document;
-      if (isPolice.isFalse){
-         document = await fireStore.collection('users').doc(userCredential.user!.uid).get();
-      }else{
-        document = await fireStore.collection('police').doc(userCredential.user!.uid).get();
-      }
-      User user = userCredential.user!;
-      if (document.exists && isPolice.isFalse) {
-        if (!user.emailVerified) {
-          await userCredential.user!.sendEmailVerification();
-          Utils.showToast(message: "Please verify your account by clicking the link in the verification email sent to your registered email address.");
-          return ;
-        }else{
-          Globals.userId=userCredential.user!.uid;
-          Globals.userProfile=UserProfile.fromJson(document.data()!);
-          if(isPolice.isTrue) {
-            await LocalDB.setData(LocalDataKey.userData.name, jsonEncode( UserProfile.fromJson(document.data()!).toJson()));
-            await LocalDB.setData(LocalDataKey.loggedIn.name, true);
-            await LocalDB.setData(LocalDataKey.userId.name, userCredential.user!.uid);
-          }
+      if (response != null && response['status']==true) {
+        dialog.hide();
+        Globals.userProfile=UserProfile.fromJson(response['data']);
+        Globals.userId=Globals.userProfile?.user_id;
+        Globals.authToken = response['auth'];
+        await LocalDB.setData(LocalDataKey.userData.name, jsonEncode( Globals.userProfile?.toJson()));
+        await LocalDB.setData(LocalDataKey.authToken.name, response['auth']);
+        await LocalDB.setData(LocalDataKey.loggedIn.name, true);
+        await LocalDB.setData(LocalDataKey.userId.name, Globals.userProfile?.user_id);
+        if(Globals.userProfile?.type=="USER") {
           Get.offAllNamed(Routes.LANDING);
+        }else if(Globals.userProfile?.isApproved==true && Globals.userProfile?.type=="POLICE" ){
+          Get.offAllNamed(Routes.REQUESTS);
+        }else if(Globals.userProfile?.isApproved==false && Globals.userProfile?.type=="POLICE" ){
+          Get.to(const Pending());
         }
-        return "true";
-      } else if (document.exists && isPolice.isTrue) {
-        if (!user.emailVerified) {
-          await userCredential.user!.sendEmailVerification();
-          Utils.showToast(message: "Please verify your account by clicking the link in the verification email sent to your registered email address.");
-          return ;
-        }else{
-          Globals.userId=userCredential.user!.uid;
-          Globals.userProfile=UserProfile.fromJson(document.data()!);
-          if(isPolice.isTrue) {
-            await LocalDB.setData(LocalDataKey.userData.name, jsonEncode( UserProfile.fromJson(document.data()!).toJson()));
-            await LocalDB.setData(LocalDataKey.loggedIn.name, true);
-            await LocalDB.setData(LocalDataKey.userId.name, userCredential.user!.uid);
-          }
-          if(Globals.userProfile?.isApproved==true){
-            Get.offAllNamed(Routes.REQUESTS);
-          }else{
-            Get.to(const Pending());
-          }
-        }
-        return "true";
+        update();
+      }else if(response!= null && response['success']==false ){
+        dialog.hide();
+        Utils.showToast(message: response['message']);
+        update();
       }else{
-        userNotExist();
+        dialog.hide();
+        Utils.showToast(message: response['message']);
+        update();
       }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found' || e.code == 'invalid-credential') {
-        dialog.hide();
-        userNotExist();
-      } else if (e.code == 'wrong-password') {
-        dialog.hide();
-        Utils.showToast(message: "Please enter valid password.");
-        return 'wrongPassword';
-      } else if (e.code == 'invalid-email') {
-        dialog.hide();
-        Utils.showToast(message: "Please enter valid email.");
-        return 'invalid-email';
-      } else {
-        dialog.hide();
-        Utils.showToast(message: "Please Check your credentials");
-        return 'false';
-      }
+    } on Exception catch (e) {
+      dialog.hide();
+      userNotExist();
+      Get.log('Sign Up ${e.toString()}');
     }
   }
+
 }

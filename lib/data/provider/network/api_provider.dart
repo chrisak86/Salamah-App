@@ -37,7 +37,7 @@ class APIProvider {
         response = await _client.get(fullUrl ?? (ApiEndPoints.baseUrl + url),
             options: Options(headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
-            //   'authorization': "Bearer ${Globals.authToken}"
+               'authorization': "Bearer ${Globals.authToken}"
             }),
           // queryParameters: query as Map<String, dynamic>
         );
@@ -121,7 +121,7 @@ class APIProvider {
             data: body,
             options: Options(headers: <String, String>{
               'Content-Type': 'application/json; charset=UTF-8',
-         //      'authorization': "Bearer ${Globals.authToken}",
+               'authorization': "Bearer ${Globals.authToken}",
             }));
       } else {
         log(fullUrl ?? (ApiEndPoints.baseUrl + url));
@@ -225,7 +225,7 @@ class APIProvider {
         log(fullUrl ?? (ApiEndPoints.baseUrl + url));
         log("auth false");
         log(jsonEncode(body));
-        response = await _client.put(fullUrl ?? (ApiEndPoints.baseUrl + url),
+        response = await _client.patch(fullUrl ?? (ApiEndPoints.baseUrl + url),
             data: body,
             options: Options(
                 headers: <String, String>{'Content-Type': 'application/json'}));

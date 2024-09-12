@@ -1,4 +1,10 @@
 import 'package:get/get.dart';
+import 'package:salamah/presentation/police/travel_tracking/bindings/police_travel_tracking_binding.dart';
+import 'package:salamah/presentation/police/travel_tracking/views/police_travel_tracking_view.dart';
+import 'package:salamah/presentation/victom/travel_tracking/bindings/travel_tracking_binding.dart';
+import 'package:salamah/presentation/victom/travel_tracking/views/travel_tracking_view.dart';
+import 'package:salamah/presentation/web/dash_board_tracking/bindings/panel_tracking_binding.dart';
+import 'package:salamah/presentation/web/dash_board_tracking/views/panel_tracking_view.dart';
 
 import '../../presentation/forgot_password/bindings/forgot_password_binding.dart';
 import '../../presentation/forgot_password/views/forgot_password_view.dart';
@@ -23,6 +29,8 @@ class AppPages {
   AppPages._();
 
   static const INITIAL = Routes.SPLASH;
+
+
 
   static final routes = [
     GetPage(
@@ -49,6 +57,21 @@ class AppPages {
       name: _Paths.LANDING,
       page: () => const LandingView(),
       binding: LandingBinding(),
+    ),
+    GetPage(
+      name: _Paths.TRAVEL,
+      page: () => TravelTrackingView(),
+      binding: TravelTrackingBinding(),
+    ),
+    GetPage(
+      name: _Paths.POLICE_TRAVEL,
+      page: () => PoliceTravelTrackingView(),
+      binding: PoliceTravelTrackingBinding(),
+    ),
+    GetPage(
+      name: _Paths.PANEL_TRAVEL,
+      page: () => PanelTrackingView(),
+      binding: PanelTrackingBinding(),
     ),
     GetPage(
       name: _Paths.REQUESTS,

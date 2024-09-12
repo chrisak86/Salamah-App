@@ -102,7 +102,7 @@ class WebLoginView extends GetView<WebLoginController> {
                                       ),
                                       onPressed: () {
                                         if (controller.formKey.currentState!.validate()) {
-                                          if(controller.emailController.text=="salamah.com" &&
+                                          if(controller.emailController.text=="salamah@gmail.com" &&
                                           controller.passController.text=="12345678"){
                                             Get.toNamed(Routes.WEB_DASHBOARD);
                                           } else {

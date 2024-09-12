@@ -1,4 +1,5 @@
 
+import 'package:dio_log/dio_log.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:salamah/app/config/app_colors.dart';
@@ -22,6 +23,13 @@ class _CustomButtonState extends State<CustomButton> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: (){
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => HttpLogListWidget(),
+          ),
+        );
+      },
       onTap:widget.onPress,
       child: Container(
         width:widget.width ?? double.infinity,

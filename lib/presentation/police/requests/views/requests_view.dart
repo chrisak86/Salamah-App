@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:salamah/app/config/app_colors.dart';
+import 'package:salamah/app/routes/app_pages.dart';
 import 'package:salamah/app/shared_widgets/Text.dart';
-
+import 'package:sizer/sizer.dart';
 import '../controllers/requests_controller.dart';
 
 class RequestsView extends GetView<RequestsController> {
   const RequestsView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<RequestsController>(
       init: RequestsController(),
       builder: (controller) {
-        return Obx(()=>Scaffold(
+        return Obx(() => Scaffold(
           backgroundColor: Colors.white,
           appBar: AppBar(
             backgroundColor: Colors.white,
             elevation: 0,
             centerTitle: true,
-            title: const MyText(title:  "Requests",),
+            title: const MyText(title: "Requests"),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout, color: AppColors.primary),
+                onPressed: () {
+                  controller.logout();
+                },
+              ),
+            ],
           ),
           body: SafeArea(
             child: Column(
@@ -29,20 +38,21 @@ class RequestsView extends GetView<RequestsController> {
                   child: Switch(
                     value: controller.isOnline.value,
                     onChanged: (value) {
-                      controller.isOnline.value=value;
+                      controller.isOnline.value = value;
                       controller.updateOnlineStatus(value);
                     },
                     activeColor: Colors.blue,
                   ),
                 ).paddingOnly(right: 24),
                 Expanded(
-                  child: controller.isOnline.isFalse ?
-                      const Center(child: MyText(title: "You are offline",),)
-                  :Padding(
+                  child: controller.isOnline.isFalse
+                      ? const Center(child: MyText(title: "You are offline"))
+                      : Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: ListView.builder(
-                      itemCount: 4,
+                      itemCount: controller.ticketsList.length,
                       itemBuilder: (context, index) {
+                        final ticket = controller.ticketsList[index];
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
                           child: Card(
@@ -52,29 +62,62 @@ class RequestsView extends GetView<RequestsController> {
                             color: AppColors.primary,
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Column(
+                                  // Upper part with data
+                                  Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      MyText(title: "2024-07-14   20:08",clr: AppColors.kWhite,),
-                                      SizedBox(height: 8),
-                                      MyText(title:"Police",clr: AppColors.kWhite,),
+                                      MyText(
+                                        title: "ID :  ${ticket.user_id}",
+                                        clr: AppColors.kWhite,
+                                      ),
+                                      MyText(
+                                        title: "Name :  ${ticket.user_name}",
+                                        clr: AppColors.kWhite,
+                                      ),
+                                      MyText(
+                                        title: "Time :  ${ticket.ETA}",
+                                        clr: AppColors.kWhite,
+                                      ),
+                                      MyText(
+                                        title: "Distance :  ${ticket.distance}",
+                                        clr: AppColors.kWhite,
+                                      ),
                                     ],
                                   ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.secondary,
-                                      borderRadius: BorderRadius.circular(16),
+                                  const SizedBox(height: 16),
+
+                                  // Bottom part with buttons
+                                  InkWell(
+                                    onTap: () {
+                                      if (ticket.attend_id == null) {
+                                        controller.attendEmergency(ticket);
+                                      } else {
+                                        Get.toNamed(Routes.POLICE_TRAVEL, arguments: ticket);
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 45,
+                                      width: 80.w,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.secondary,
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      child: const Center(
+                                        child: MyText(
+                                          title: "Attend",
+                                          clr: AppColors.black,
+                                        ),
+                                      ),
                                     ),
-                                    child: const MyText(title: "2.3 km away",clr: AppColors.black,),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
+                          )
+                          ,
                         );
                       },
                     ),
@@ -84,7 +127,7 @@ class RequestsView extends GetView<RequestsController> {
             ),
           ),
         ));
-      }
+      },
     );
   }
 }

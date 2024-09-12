@@ -11,9 +11,6 @@ class LocalDB extends GetxService {
   @override
   void onInit() async {
     pref = await SharedPreferences.getInstance();
-    Get.log("LocalDB Controller init called : Service Started");
-    Globals.userId = pref.getString("userId") ?? "";
-    Globals.loggedIn = pref.getBool('loggedIn') ?? false;
     super.onInit();
   }
 

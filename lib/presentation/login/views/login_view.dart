@@ -71,23 +71,24 @@ class LoginView extends GetView<LoginController> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Row(
-                                      children: [
-                                        Checkbox(
-                                          value: controller.isPolice.value,
-                                          onChanged: ( value) {
-                                            controller.isPolice.value=value!;
-                                          },
-                                        ),
-                                        MyText(
-                                          title: "Signing as Police",
-                                          clr: AppColors.textFieldLabel,
-                                          size: 9.sp,
-                                          weight: FontWeight.w500,
-                                          family: AppFonts.urban700,
-                                        )
-                                      ],
-                                    ),
+                                    Container(),
+                                    // Row(
+                                    //   children: [
+                                    //     Checkbox(
+                                    //       value: controller.isPolice.value,
+                                    //       onChanged: ( value) {
+                                    //         controller.isPolice.value=value!;
+                                    //       },
+                                    //     ),
+                                    //     MyText(
+                                    //       title: "Signing as Police",
+                                    //       clr: AppColors.textFieldLabel,
+                                    //       size: 9.sp,
+                                    //       weight: FontWeight.w500,
+                                    //       family: AppFonts.urban700,
+                                    //     )
+                                    //   ],
+                                    // ),
                                     GestureDetector(
                                       onTap: (){
                                         Get.toNamed(Routes.FORGOT_PASSWORD);
