@@ -23,13 +23,42 @@ class LandingView extends GetView<LandingController> {
         title:  MyText(title:'Accident', size: 16.sp,clr: AppColors.primary,),
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.logout, color: AppColors.primary),
-            onPressed: () {
-              controller.logout();
+          PopupMenuButton<int>(
+            icon: const Icon(Icons.settings, color: AppColors.primary),  // Settings button icon
+            onSelected: (value) {
+              if (value == 0) {
+                controller.logout();
+              } else if (value == 1) {
+                controller.showDeleteAccountDialog();
+              }
             },
+            itemBuilder: (context) => [
+              // Menu item for logout
+              const PopupMenuItem(
+                value: 0,
+                child: Row(
+                  children: [
+                    Icon(Icons.logout, color: AppColors.primary),
+                    SizedBox(width: 8),
+                    Text('Logout'),
+                  ],
+                ),
+              ),
+              // Menu item for delete account
+              const PopupMenuItem(
+                value: 1,
+                child: Row(
+                  children: [
+                    Icon(Icons.delete, color: AppColors.primary),
+                    SizedBox(width: 8),
+                    Text('Delete Account'),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
+
       ),
       body: Column(
         children: [

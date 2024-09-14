@@ -22,11 +22,39 @@ class RequestsView extends GetView<RequestsController> {
             centerTitle: true,
             title: const MyText(title: "Requests"),
             actions: [
-              IconButton(
-                icon: const Icon(Icons.logout, color: AppColors.primary),
-                onPressed: () {
-                  controller.logout();
+              PopupMenuButton<int>(
+                icon: const Icon(Icons.settings, color: AppColors.primary),  // Settings button icon
+                onSelected: (value) {
+                  if (value == 0) {
+                    controller.logout();
+                  } else if (value == 1) {
+                    controller.showDeleteAccountDialog();
+                  }
                 },
+                itemBuilder: (context) => [
+                  // Menu item for logout
+                  const PopupMenuItem(
+                    value: 0,
+                    child: Row(
+                      children: [
+                        Icon(Icons.logout, color: AppColors.primary),
+                        SizedBox(width: 8),
+                        Text('Logout'),
+                      ],
+                    ),
+                  ),
+                  // Menu item for delete account
+                  const PopupMenuItem(
+                    value: 1,
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete, color: AppColors.primary),
+                        SizedBox(width: 8),
+                        Text('Delete Account'),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -75,6 +103,10 @@ class RequestsView extends GetView<RequestsController> {
                                       ),
                                       MyText(
                                         title: "Name :  ${ticket.user_name}",
+                                        clr: AppColors.kWhite,
+                                      ),
+                                      MyText(
+                                        title: "Police Station :  ${ticket.police_station_name}",
                                         clr: AppColors.kWhite,
                                       ),
                                       MyText(

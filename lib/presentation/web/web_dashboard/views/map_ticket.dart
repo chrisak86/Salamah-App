@@ -53,6 +53,7 @@ class TicketCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               MyText(title:tickets?.user_name, size: 14,),
+              MyText(title:tickets?.police_station_name ?? tickets?.hospital_name ?? tickets?.fire_station_name ?? ""  , size: 14,),
               MyText(title:tickets?.distance, size: 12,),
               MyText(title:tickets?.ETA, size: 12,),
             ],

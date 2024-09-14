@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -12,6 +13,7 @@ import 'package:salamah/app/models/hospital.dart';
 import 'package:salamah/app/models/police_station.dart';
 import 'package:salamah/app/models/tickets.dart';
 import 'package:salamah/app/routes/app_pages.dart';
+import 'package:salamah/app/shared_widgets/Text.dart';
 import 'package:salamah/app/utils/utils.dart';
 import 'package:salamah/data/repositories/profile_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -195,6 +197,33 @@ class LandingController extends GetxController {
     Get.offAndToNamed(Routes.LOGIN);
   }
 
+  void showDeleteAccountDialog() {
+    showDialog(
+      context: Get.context!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const MyText(title: "Delete Account"),
+          content: const MyText(title: "Are you sure you want to delete your account?"),
+          actions: [
+            TextButton(
+              child: const MyText(title: "Cancel"),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+            TextButton(
+              child: const MyText(title: "Delete"),
+              onPressed: () {
+               logout();
+               Utils.showToast(message: "You are account has been deleted.");
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
 
   Future<void> updateOnlineStatus(List<PoliceStationAPI> apiStations) async {
@@ -222,6 +251,7 @@ class LandingController extends GetxController {
               ETA: apiStation.eta,
               distance: apiStation.distance,
               police_station_id: matchingStation.id,
+              police_station_name: matchingStation.police_station_name,
               user_lat: currentLocation.value.latitude,
               user_long: currentLocation.value.longitude,
               police_lat: apiStation.latitude,
@@ -258,6 +288,7 @@ class LandingController extends GetxController {
                 ETA: apiStation.eta,
                 distance: apiStation.distance,
                 hospital_id: matchingStation.id,
+                hospital_name: matchingStation.name,
                 user_lat: currentLocation.value.latitude,
                 user_long: currentLocation.value.longitude,
                 police_lat: apiStation.latitude,
@@ -289,6 +320,7 @@ class LandingController extends GetxController {
                 user_lat: currentLocation.value.latitude,
                 user_long: currentLocation.value.longitude,
                 police_lat: apiStation.latitude,
+                fire_station_name: matchingStation.fire_station_name,
                 police_long: apiStation.longitude,
                 type:"FIRETRUCK",
                 completed: false

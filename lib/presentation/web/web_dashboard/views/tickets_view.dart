@@ -47,6 +47,14 @@ class TicketsView extends StatelessWidget {
                 Expanded(
                   child: Center(
                     child: Text(
+                      'Type Name',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text(
                       'Status',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                     ),
@@ -98,6 +106,11 @@ class TicketsView extends StatelessWidget {
                       Expanded(
                         child: Center(
                           child: Text(ticket.type.toString()),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Text(ticket.police_station_name  ?? ticket.hospital_name ?? ticket.fire_station_name ?? ""),
                         ),
                       ),
                       Expanded(

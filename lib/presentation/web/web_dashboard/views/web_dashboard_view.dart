@@ -123,7 +123,7 @@ class NavigationPanel extends StatelessWidget {
           _buildMenuItem('Police Station', Icons.local_police, 2),
           _buildMenuItem('Fire Station', Icons.fire_truck, 3),
           _buildMenuItem('Hospitals', Icons.local_hospital, 4),
-          _buildMenuItem('Police', Icons.security, 5),
+          _buildMenuItem('Police Officers', Icons.security, 5),
         ],
       ),
     );

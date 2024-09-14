@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:salamah/app/config/global_var.dart';
 import 'package:salamah/app/models/tickets.dart';
 import 'package:salamah/app/models/police_officer.dart';
 import 'package:salamah/app/models/user.dart';
 import 'package:salamah/app/routes/app_pages.dart';
+import 'package:salamah/app/shared_widgets/Text.dart';
+import 'package:salamah/app/utils/utils.dart';
 import 'package:salamah/data/repositories/profile_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -83,6 +86,33 @@ class RequestsController extends GetxController {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
     Get.offAndToNamed(Routes.LOGIN);
+  }
+
+  void showDeleteAccountDialog() {
+    showDialog(
+      context: Get.context!,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const MyText(title: "Delete Account"),
+          content: const MyText(title: "Are you sure you want to delete your account?"),
+          actions: [
+            TextButton(
+              child: const MyText(title: "Cancel"),
+              onPressed: () {
+                Get.back();
+              },
+            ),
+            TextButton(
+              child: const MyText(title: "Delete"),
+              onPressed: () {
+                logout();
+                Utils.showToast(message: "You are account has been deleted.");
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
 }

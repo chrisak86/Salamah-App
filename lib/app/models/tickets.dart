@@ -8,6 +8,9 @@ class Tickets {
   double? police_long;
   int? police_station_id;
   String? type;
+  String? police_station_name;
+  String? fire_station_name;
+  String? hospital_name;
   int? user_id;
   int? firetruck_id;
   int? hospital_id;
@@ -21,6 +24,9 @@ class Tickets {
         this.user_name,
        this.user_id,
         this.distance,
+        this.police_station_name,
+        this.fire_station_name,
+        this.hospital_name,
         this.type,
         this.hospital_id,
         this.firetruck_id,
@@ -51,11 +57,17 @@ class Tickets {
     user_long = json['user_long'];
     firetruck_id = json['firetruck_id'];
     hospital_id = json['hospital_id'];
+    police_station_name = json['police_station_name'];
+    fire_station_name = json['fire_station_name'];
+    hospital_name = json['hospital_name'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
+    data['police_station_name'] = police_station_name;
+    data['fire_station_name'] = fire_station_name;
+    data['hospital_name'] = hospital_name;
     data['user_name'] = user_name;
     data['hospital_id'] = hospital_id;
     data['firetruck_id'] = firetruck_id;
