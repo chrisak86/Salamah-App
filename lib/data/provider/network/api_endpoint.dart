@@ -1,5 +1,5 @@
 class ApiEndPoints{
-  static  String get baseUrl => "http://192.168.1.19:8000/api/";
+  static  String get baseUrl => "http://98.81.146.165:8000/api/";
   static  String get requestUrl => "https://8kkapnr1x1.execute-api.us-east-1.amazonaws.com/prod";
   static  String get getPoliceStations => "list-police-station/";
   static  String get getFireStations => "list-fire-station/";
