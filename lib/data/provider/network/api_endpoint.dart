@@ -9,6 +9,7 @@ class ApiEndPoints{
   static  String get updateTicketStatus => "update-ticket/";
   static  String get updatePoliceStation => "update-police-station/";
   static  String get assignPoliceStation => "assign-police-station/";
+  static  String get unAssignPoliceStation => "delete-police-station/";
   static  String get updatePoliceOfficer => "update-user/";
   static  String get policeOfficers => "police-officer/";
   static  String get getAllTickets => "all-ticket/";

@@ -282,6 +282,19 @@ class RequestRepository{
   }
 
 
+  Future unAssignPoliceStation({id}) async {
+    Map<String, dynamic> data = await apiClient.baseDeleteAPI(
+        "${ApiEndPoints.unAssignPoliceStation}",
+        {
+          "id": id,
+        },
+        false,
+        Get.context,
+        loading: true
+    );
+    return data;
+  }
+
 
 
 

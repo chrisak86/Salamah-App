@@ -88,7 +88,7 @@ class RequestsController extends GetxController {
     Get.offAndToNamed(Routes.LOGIN);
   }
 
-  void showDeleteAccountDialog() {
+   showDeleteAccountDialog() {
     showDialog(
       context: Get.context!,
       builder: (BuildContext context) {
@@ -105,8 +105,7 @@ class RequestsController extends GetxController {
             TextButton(
               child: const MyText(title: "Delete"),
               onPressed: () {
-                logout();
-                Utils.showToast(message: "You are account has been deleted.");
+                deleteStation();
               },
             ),
           ],
@@ -114,5 +113,23 @@ class RequestsController extends GetxController {
       },
     );
   }
+
+  Future<void> deleteStation() async {
+    var response;
+    try {
+      response = await requestRepository.unAssignPoliceStation(id:Globals.userProfile?.user_id);
+      if (response['success']==true) {
+        logout();
+        Utils.showToast(message: "You are account has been deleted.");
+      }else if(response != null && response['status']==false ){
+        update();
+      }else{
+        update();
+      }
+    } on Exception catch (e) {
+      Get.log('Sign Up ${e.toString()}');
+    }
+  }
+
 
 }
