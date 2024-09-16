@@ -1,4 +1,3 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:salamah/data/provider/local_storage/local_db.dart';
@@ -16,12 +15,10 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-    return  DevicePreview(
-        enabled: false,
-        builder: (context)=>  Sizer(builder: (context, orientation, deviceType) {
+    return
+            Sizer(builder: (context, orientation, deviceType) {
           return GetMaterialApp(
             debugShowCheckedModeBanner: false,
             title: "Application",
@@ -29,6 +26,6 @@ class MyApp extends StatelessWidget {
             getPages: AppPages.routes,
           );
         }
-        ));
+        );
   }
 }
