@@ -9,6 +9,8 @@ import 'package:salamah/app/config/app_colors.dart';
 import 'package:salamah/app/config/global_var.dart';
 import 'package:http/http.dart' as http;
 import 'package:salamah/app/models/tickets.dart';
+import 'package:salamah/app/routes/app_pages.dart';
+import 'package:salamah/app/shared_widgets/Text.dart';
 import 'package:salamah/app/utils/utils.dart';
 import 'package:salamah/data/repositories/profile_repository.dart';
 
@@ -20,6 +22,7 @@ class TravelTrackingController extends GetxController {
   var polylines = <Polyline>{}.obs;
   var markers = <Marker>[].obs;
   var distance = "".obs;
+  var name = "".obs;
   var eta = "".obs;
   late BitmapDescriptor customIcon;
   late BitmapDescriptor icon1;
@@ -64,6 +67,9 @@ class TravelTrackingController extends GetxController {
         update();
       } else {
         tickets = Tickets.fromJson(response["data"][0]);
+        if(index.value==1){
+          showCustomNotification(Get.context!,tickets!.police_station_name!,tickets!.distance!,tickets!.ETA!);
+        }
         update();
       }
 
@@ -72,6 +78,7 @@ class TravelTrackingController extends GetxController {
         userData = LatLng(tickets!.user_lat!, tickets!.user_long!);
         LatLng userLatLng = LatLng(tickets!.user_lat!, tickets!.user_long!);
         distance.value = tickets?.distance ?? '';
+        name.value = tickets?.police_station_name ?? tickets?.hospital_name ?? tickets?.fire_station_name ?? "";
         eta.value = tickets?.ETA ?? '';
 
         polylines.clear();
@@ -214,6 +221,9 @@ class TravelTrackingController extends GetxController {
         tickets=Tickets.fromJson(response['data']);
         update();
         Utils.showToast(message: "Completed");
+        if(index.value==1){
+          Get.offAndToNamed(Routes.LANDING);
+        }
         update();
       }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){
         update();
@@ -224,5 +234,48 @@ class TravelTrackingController extends GetxController {
       Get.log('Sign Up ${e.toString()}');
     }
   }
+
+  void showCustomNotification(BuildContext context, String policeStation, String distance, String eta) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Align(
+          alignment: Alignment.topCenter,
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              margin: const EdgeInsets.only(top: 50), // Adjust margin from top
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MyText(
+                    title: "Attendee Police: ${policeStation}",
+                  ),
+                  const SizedBox(height: 2),
+                  MyText(
+                    title: "Distance: ${distance}",
+                  ),
+                  MyText(
+                    title: "Time Estimate: ${eta}",
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.of(context).pop();
+    });
+  }
+
 
 }

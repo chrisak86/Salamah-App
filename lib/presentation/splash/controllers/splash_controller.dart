@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:salamah/app/config/global_var.dart';
 import 'package:salamah/app/config/local_keys.dart';
+import 'package:salamah/app/models/tickets.dart';
 import 'package:salamah/app/models/user.dart';
 import 'package:salamah/app/routes/app_pages.dart';
 import 'package:salamah/app/utils/utils.dart';
@@ -40,7 +41,7 @@ class SplashController extends GetxController {
         await LocalDB.setData(LocalDataKey.loggedIn.name, true);
         await LocalDB.setData(LocalDataKey.userId.name, Globals.userProfile?.user_id);
         if(Globals.userProfile?.type=="USER") {
-          Get.offAllNamed(Routes.LANDING);
+          fetchData();
         }else if(Globals.userProfile?.isApproved==true && Globals.userProfile?.type=="POLICE" ){
           Get.offAllNamed(Routes.REQUESTS);
         }else if(Globals.userProfile?.isApproved==false && Globals.userProfile?.type=="POLICE" ){
@@ -61,5 +62,32 @@ class SplashController extends GetxController {
     }
 
   }
+
+  Future<void> fetchData() async {
+    var response;
+    try {
+      response = await requestRepository.getUserTicket(type: "ACCIDENT");
+
+      if (response != null && response["data"] != null && (response["data"] as List).isEmpty) {
+        Get.offAllNamed(Routes.LANDING);
+        update();
+      } else {
+        List<Tickets> ticketsList = (response["data"] as List).map((ticket) => Tickets.fromJson(ticket)).toList();
+        ticketsList.removeWhere((ticket) => ticket.completed == true);
+
+        if (ticketsList.isNotEmpty) {
+          Get.toNamed(Routes.TRAVEL,arguments: 1);
+          update();
+        } else {
+          Get.offAllNamed(Routes.LANDING);
+          update();
+        }
+      }
+    } catch (e) {
+      Get.offAllNamed(Routes.LANDING);
+      print('Error fetching data: $e');
+    }
+  }
+
 
 }

@@ -241,6 +241,7 @@ class LandingController extends GetxController {
       }
     }
     Get.toNamed(Routes.TRAVEL,arguments: selectedIndex.value+1);
+
   }
 
   Future<void> addTickets(PoliceStationAPI apiStation, PoliceStation matchingStation) async {

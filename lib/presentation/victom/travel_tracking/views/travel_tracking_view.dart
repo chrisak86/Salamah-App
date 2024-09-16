@@ -130,10 +130,22 @@ class TravelTrackingView extends GetView<TravelTrackingController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Obx(() => Text(
-                    "Target is ${controller.distance.value}")),
-                Obx(() => Text(
-                    "Time till arrival: ${controller.eta.value}.")),
+                Visibility(
+                  visible: controller.tickets?.police_station_name!=null,
+                  child:  Obx(() => MyText(
+                    title:"Police is on the way from ${controller.name.value}")),),
+                Visibility(
+                  visible: controller.tickets?.hospital_name!=null,
+                  child:  Obx(() => MyText(
+                      title: "Ambulance is on the way from ${controller.name.value}")),),
+                Visibility(
+                  visible: controller.tickets?.fire_station_name!=null,
+                  child:  Obx(() => MyText(
+                      title:"Fire truck is on the way from ${controller.name.value}")),),
+                Obx(() => MyText(
+                    title:"Distance: ${controller.distance.value}")),
+                Obx(() => MyText(
+                    title: "Estimate Time: ${controller.eta.value}.")),
                 Visibility(
                   visible: controller.tickets!=null && controller.tickets?.completed==false,
                   child: CustomButton(
