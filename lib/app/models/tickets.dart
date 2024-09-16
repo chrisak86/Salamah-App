@@ -3,6 +3,8 @@ class Tickets {
   String? ETA;
   int? attend_id;
   bool? completed;
+  bool? cancel;
+  String? reason;
   String? distance;
   double? police_lat;
   double? police_long;
@@ -28,6 +30,8 @@ class Tickets {
         this.fire_station_name,
         this.hospital_name,
         this.type,
+        this.cancel,
+        this.reason,
         this.hospital_id,
         this.firetruck_id,
         this.attend_id,
@@ -52,6 +56,8 @@ class Tickets {
     police_long = json['dest_long'];
     police_station_id = json['police_station_id'];
     type = json['type_choice'];
+    cancel = json['cancel'];
+    reason = json['reason'];
     user_id = json['user_id'];
     user_lat = json['user_lat'];
     user_long = json['user_long'];
@@ -72,6 +78,8 @@ class Tickets {
     data['hospital_id'] = hospital_id;
     data['firetruck_id'] = firetruck_id;
     data['eta'] = ETA;
+    data['cancel'] = cancel;
+    data['reason'] = reason;
     data['attend_id'] = attend_id;
     data['completed'] = completed;
     data['distance'] = distance;

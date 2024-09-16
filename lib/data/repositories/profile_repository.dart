@@ -240,6 +240,20 @@ class RequestRepository{
     );
     return data;
   }
+  Future cancelTicketStatus({id,reason}) async {
+    Map<String, dynamic> data = await apiClient.basePutAPI(
+        ApiEndPoints.updateTicketStatus,
+        {
+          "id": id,
+          "cancel": true,
+          "reason":reason
+        },
+        false,
+        Get.context,
+        loading: true
+    );
+    return data;
+  }
 
 
   Future getPoliceOfficerTicket() async {

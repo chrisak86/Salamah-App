@@ -150,9 +150,9 @@ class TravelTrackingView extends GetView<TravelTrackingController> {
                   visible: controller.tickets!=null && controller.tickets?.completed==false,
                   child: CustomButton(
                       height: 5.9.h,
-                      text: "Completed",
+                      text: "Cancel",
                       onPress: (){
-                        controller.updateTicketStatus();
+                        controller.showCustomInputDialog(context);
                       },
                       textColor: AppColors.kWhite,
                       boxColor: AppColors.primary).paddingOnly(top: 0.5.h),

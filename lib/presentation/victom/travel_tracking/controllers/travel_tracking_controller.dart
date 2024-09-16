@@ -66,7 +66,9 @@ class TravelTrackingController extends GetxController {
         noTicket.value = true;
         update();
       } else {
-        tickets = Tickets.fromJson(response["data"][0]);
+        List<Tickets> ticketsList = (response["data"] as List).map((ticket) => Tickets.fromJson(ticket)).toList();
+        ticketsList.removeWhere((ticket) => ticket.completed == true ||  ticket.cancel==true);
+        tickets = ticketsList.elementAt(0);
         if(index.value==1){
           showCustomNotification(Get.context!,tickets!.police_station_name!,tickets!.distance!,tickets!.ETA!);
         }
@@ -212,15 +214,52 @@ class TravelTrackingController extends GetxController {
     update();
   }
 
+  void showCustomInputDialog(BuildContext context) {
+    TextEditingController textController = TextEditingController(); // Controller for the TextField
 
-  Future<void> updateTicketStatus() async {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const MyText(title:"Enter Reason"),
+          content: TextField(
+            controller: textController,
+            maxLines: 5,
+            decoration: const InputDecoration(
+              hintText: "Please type reason here...",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                String inputText = textController.text;
+                updateTicketStatus(inputText);
+              },
+              child: const Text("Submit"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
+  Future<void> updateTicketStatus(String inputText) async {
     var response;
     try {
-      response = await requestRepository.updateTicketStatus(id: tickets?.id);
+      response = await requestRepository.cancelTicketStatus(id: tickets?.id,reason:inputText);
       if (response != null && response['success']==true) {
         tickets=Tickets.fromJson(response['data']);
         update();
-        Utils.showToast(message: "Completed");
+        Utils.showToast(message: "This is cancelled");
         if(index.value==1){
           Get.offAndToNamed(Routes.LANDING);
         }

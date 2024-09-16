@@ -73,7 +73,7 @@ class SplashController extends GetxController {
         update();
       } else {
         List<Tickets> ticketsList = (response["data"] as List).map((ticket) => Tickets.fromJson(ticket)).toList();
-        ticketsList.removeWhere((ticket) => ticket.completed == true);
+        ticketsList.removeWhere((ticket) => ticket.completed == true ||  ticket.cancel==true);
 
         if (ticketsList.isNotEmpty) {
           Get.toNamed(Routes.TRAVEL,arguments: 1);

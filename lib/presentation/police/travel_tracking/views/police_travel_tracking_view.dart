@@ -56,7 +56,7 @@ class PoliceTravelTrackingView extends GetView<PoliceTravelTrackingController> {
                       onPressed: () {
                         controller.updateTicketStatus();
                       },
-                      child: const Text('Closed'),
+                      child: const Text('Mark as Completed'),
                     ),
                   ],
                 ),
