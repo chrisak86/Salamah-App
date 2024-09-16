@@ -8,6 +8,7 @@ import 'package:salamah/app/models/police_officer.dart';
 import 'package:salamah/app/models/police_station.dart';
 import 'package:salamah/app/models/tickets.dart';
 import 'package:salamah/app/models/user.dart';
+import 'package:salamah/app/shared_widgets/Text.dart';
 import 'package:salamah/app/utils/utils.dart';
 import 'package:salamah/presentation/web/web_dashboard/views/assign_police.dart';
 import 'package:salamah/presentation/web/web_dashboard/views/map_ticket.dart';
@@ -158,6 +159,7 @@ class WebDashboardController extends GetxController {
         var data = response['data'] as List;
         if(data!=[]){
           pendingTicket.addAll(data.map((e) => Tickets.fromJson(e)).toList());
+          pendingTicket.removeWhere((element) => element.completed==true || element.cancel==true);
         }
         update();
       }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){
@@ -377,6 +379,27 @@ class WebDashboardController extends GetxController {
       Get.log('Sign Up ${e.toString()}');
     }
   }
+
+  void showReasonPopup(BuildContext context, String reasonText) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const MyText(title: "Reason"),
+          content: MyText(title:reasonText),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
 
 

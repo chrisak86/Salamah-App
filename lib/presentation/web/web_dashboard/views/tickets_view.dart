@@ -117,18 +117,22 @@ class TicketsView extends StatelessWidget {
                         child: Center(
                           child: GestureDetector(
                             onTap: () {
-                              ticket.completed=!ticket.completed!;
-                              controller.updateTicketStatus(ticket);
+                              if(ticket.cancel == null) {
+                                ticket.completed = !ticket.completed!;
+                                controller.updateTicketStatus(ticket);
+                              }if(ticket.cancel==true){
+                                controller.showReasonPopup(context,ticket.reason ?? "No reason");
+                              }
                             },
                             child: Container(
                               width: 70,
                               height: 30,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15.0),
-                                color: ticket.completed == true ? AppColors.errorColor : Colors.grey,
+                                color: ticket.cancel == true ? Colors.blue :ticket.completed == true ? AppColors.errorColor : Colors.grey,
                               ),
                               child: Center(
-                                child: MyText(title: ticket.completed == true ? "Closed" : "Close",),
+                                child: MyText(title:ticket.cancel == true ? "Cancelled" : ticket.completed == true ? "Closed" : "Close",),
                               ),
                             ),
                           ),
