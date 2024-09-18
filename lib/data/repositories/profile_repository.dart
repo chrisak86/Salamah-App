@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:salamah/app/config/global_var.dart';
+import 'package:salamah/app/models/model_log.dart';
 import 'package:salamah/app/models/tickets.dart';
 import 'package:salamah/app/models/user.dart';
 
@@ -199,6 +200,17 @@ class RequestRepository{
         true,
         Get.context,
         loading: loading ?? false
+    );
+    return data;
+  }
+
+  Future modelLogs(ModelLogs ticket) async {
+    Map<String, dynamic> data = await apiClient.basePostAPI(
+        ApiEndPoints.modelLogs,
+        ticket.toJson(),
+        true,
+        Get.context,
+        loading: false
     );
     return data;
   }

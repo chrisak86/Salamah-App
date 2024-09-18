@@ -10,6 +10,7 @@ import 'package:salamah/app/models/api_hospitals.dart';
 import 'package:salamah/app/models/api_police_station.dart';
 import 'package:salamah/app/models/fire_station.dart';
 import 'package:salamah/app/models/hospital.dart';
+import 'package:salamah/app/models/model_log.dart';
 import 'package:salamah/app/models/police_station.dart';
 import 'package:salamah/app/models/tickets.dart';
 import 'package:salamah/app/routes/app_pages.dart';
@@ -138,6 +139,13 @@ class LandingController extends GetxController {
         firetruckApiData.value = (response["body"]['Closest Fire Stations'] as List).map((e) => FireTruckAPI.fromJson(e)).toList();
         policeStationsApiData.value = (response["body"]['Closest Police Stations'] as List).map((e) => PoliceStationAPI.fromJson(e)).toList();
         updateOnlineStatus(policeStationsApiData.value);
+        await requestRepository.modelLogs(
+            ModelLogs(
+              lat: currentLocation.value.latitude,
+              long: currentLocation.value.longitude,
+              response: response,
+            )
+        );
       } else if (response != null && response['success'] == false) {
         Utils.showToast(message: response['message']);
       } else {
@@ -258,6 +266,7 @@ class LandingController extends GetxController {
               police_lat: apiStation.latitude,
               police_long: apiStation.longitude,
               type:"ACCIDENT",
+              gender: "${Globals.userProfile?.gender}",
               completed: false
           ),
         loading: true
@@ -294,6 +303,7 @@ class LandingController extends GetxController {
                 user_long: currentLocation.value.longitude,
                 police_lat: apiStation.latitude,
                 police_long: apiStation.longitude,
+                gender: "${Globals.userProfile?.gender}",
                 type:"AMBULANCE",
                 completed: false
             )
@@ -322,6 +332,7 @@ class LandingController extends GetxController {
                 user_long: currentLocation.value.longitude,
                 police_lat: apiStation.latitude,
                 fire_station_name: matchingStation.fire_station_name,
+                gender: "${Globals.userProfile?.gender}",
                 police_long: apiStation.longitude,
                 type:"FIRETRUCK",
                 completed: false

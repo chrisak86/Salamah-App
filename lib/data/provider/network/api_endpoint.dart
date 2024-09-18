@@ -16,6 +16,7 @@ class ApiEndPoints{
   static  String get getPendingTickets => "pending-ticket/";
   static  String get registerUser => "register/";
   static  String get addTicket => "ticket/";
+  static  String get modelLogs => "model-log/";
   static  String get login => "login/";
   static  String get getUser => "get-user/";
   static  String get getUserTicket => "get-ticket/";

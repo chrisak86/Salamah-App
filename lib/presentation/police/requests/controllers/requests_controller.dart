@@ -34,6 +34,8 @@ class RequestsController extends GetxController {
       var data = response['data'] as List;
       if(data!=[]){
         ticketsList.addAll(data.map((e) => Tickets.fromJson(e)).toList());
+        ticketsList.removeWhere((element) => element.gender!=Globals.userProfile?.gender);
+        update();
       }
       update();
     }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){
