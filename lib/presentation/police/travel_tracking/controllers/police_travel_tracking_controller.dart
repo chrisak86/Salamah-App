@@ -46,36 +46,37 @@ class PoliceTravelTrackingController extends GetxController {
         distance.value = tickets?.distance ?? '';
         eta.value = tickets?.ETA ?? '';
 
-        polylines.clear();
-        polylines.add(
-          Polyline(
-            polylineId: PolylineId('route1'),
-            points: [userLatLng, policeStationLatLng],
-            color: AppColors.primary,
-            width: 5,
-          ),
-        );
+        getDirections(userLatLng, policeStationLatLng);
+        // polylines.clear();
+        // polylines.add(
+        //   Polyline(
+        //     polylineId: PolylineId('route1'),
+        //     points: [userLatLng, policeStationLatLng],
+        //     color: AppColors.primary,
+        //     width: 5,
+        //   ),
+        // );
 
-        update();
-        markers.clear();
-        markers.add(Marker(markerId: MarkerId('user'), position: userLatLng, icon: customIcon));
-        markers.add(Marker(markerId: MarkerId('station'), position: policeStationLatLng, icon: icon1));
-
-        if (mapController != null) {
-          LatLngBounds bounds = LatLngBounds(
-            southwest: LatLng(
-              min(userLatLng.latitude, policeStationLatLng.latitude),
-              min(userLatLng.longitude, policeStationLatLng.longitude),
-            ),
-            northeast: LatLng(
-              max(userLatLng.latitude, policeStationLatLng.latitude),
-              max(userLatLng.longitude, policeStationLatLng.longitude),
-            ),
-          );
-          mapController!.animateCamera(
-            CameraUpdate.newLatLngBounds(bounds, 50),
-          );
-        }
+        // update();
+        // markers.clear();
+        // markers.add(Marker(markerId: MarkerId('user'), position: userLatLng, icon: customIcon));
+        // markers.add(Marker(markerId: MarkerId('station'), position: policeStationLatLng, icon: icon1));
+        //
+        // if (mapController != null) {
+        //   LatLngBounds bounds = LatLngBounds(
+        //     southwest: LatLng(
+        //       min(userLatLng.latitude, policeStationLatLng.latitude),
+        //       min(userLatLng.longitude, policeStationLatLng.longitude),
+        //     ),
+        //     northeast: LatLng(
+        //       max(userLatLng.latitude, policeStationLatLng.latitude),
+        //       max(userLatLng.longitude, policeStationLatLng.longitude),
+        //     ),
+        //   );
+        //   mapController!.animateCamera(
+        //     CameraUpdate.newLatLngBounds(bounds, 50),
+        //   );
+        // }
       }
   }
 

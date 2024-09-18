@@ -83,36 +83,37 @@ class TravelTrackingController extends GetxController {
         name.value = tickets?.police_station_name ?? tickets?.hospital_name ?? tickets?.fire_station_name ?? "";
         eta.value = tickets?.ETA ?? '';
 
-        polylines.clear();
-        polylines.add(
-          Polyline(
-            polylineId: PolylineId('route1'),
-            points: [userLatLng, policeStationLatLng],
-            color: AppColors.primary,
-            width: 5,
-          ),
-        );
-
-        update();
-        markers.clear();
-        markers.add(Marker(markerId: MarkerId('user'), position: userLatLng, icon: customIcon));
-        markers.add(Marker(markerId: MarkerId('station'), position: policeStationLatLng, icon: icon1));
-
-        if (mapController != null) {
-          LatLngBounds bounds = LatLngBounds(
-            southwest: LatLng(
-              min(userLatLng.latitude, policeStationLatLng.latitude),
-              min(userLatLng.longitude, policeStationLatLng.longitude),
-            ),
-            northeast: LatLng(
-              max(userLatLng.latitude, policeStationLatLng.latitude),
-              max(userLatLng.longitude, policeStationLatLng.longitude),
-            ),
-          );
-          mapController!.animateCamera(
-            CameraUpdate.newLatLngBounds(bounds, 50),
-          );
-        }
+        getDirections(userLatLng,policeStationLatLng);
+        // polylines.clear();
+        // polylines.add(
+        //   Polyline(
+        //     polylineId: PolylineId('route1'),
+        //     points: [userLatLng, policeStationLatLng],
+        //     color: AppColors.primary,
+        //     width: 5,
+        //   ),
+        // );
+        //
+        // update();
+        // markers.clear();
+        // markers.add(Marker(markerId: MarkerId('user'), position: userLatLng, icon: customIcon));
+        // markers.add(Marker(markerId: MarkerId('station'), position: policeStationLatLng, icon: icon1));
+        //
+        // if (mapController != null) {
+        //   LatLngBounds bounds = LatLngBounds(
+        //     southwest: LatLng(
+        //       min(userLatLng.latitude, policeStationLatLng.latitude),
+        //       min(userLatLng.longitude, policeStationLatLng.longitude),
+        //     ),
+        //     northeast: LatLng(
+        //       max(userLatLng.latitude, policeStationLatLng.latitude),
+        //       max(userLatLng.longitude, policeStationLatLng.longitude),
+        //     ),
+        //   );
+        //   mapController!.animateCamera(
+        //     CameraUpdate.newLatLngBounds(bounds, 50),
+        //   );
+        // }
       }
     } catch (e) {
       print('Error fetching data: $e');
@@ -131,6 +132,7 @@ class TravelTrackingController extends GetxController {
       final response = await http.get(Uri.parse(url));
       final Map<String, dynamic> data = json.decode(response.body);
 
+      print("xxxxxxxxxx${response}");
       if (data['status'] == 'OK') {
         final List<LatLng> points = _decodePolyline(
           data['routes'][0]['overview_polyline']['points'],
