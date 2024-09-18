@@ -30,11 +30,13 @@ class TravelTrackingController extends GetxController {
   var selectedIndex = 0.obs;
   Tickets? tickets;
   RxBool noTicket=false.obs;
+  RxBool back=true.obs;
 
   @override
   void onInit() async {
     if(Get.arguments!=null){
       index.value=Get.arguments;
+      back.value=false;
     }
     super.onInit();
     await getCustomMarker();

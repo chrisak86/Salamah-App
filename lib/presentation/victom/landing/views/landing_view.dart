@@ -16,10 +16,7 @@ class LandingView extends GetView<LandingController> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.primary),
-          onPressed: () => Get.back(),
-        ),
+        automaticallyImplyLeading: false,
         title:  MyText(title:'Accident', size: 16.sp,clr: AppColors.primary,),
         centerTitle: true,
         actions: [

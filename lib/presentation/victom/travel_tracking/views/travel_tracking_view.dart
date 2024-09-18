@@ -18,6 +18,7 @@ class TravelTrackingView extends GetView<TravelTrackingController> {
       appBar: AppBar(
         title:  MyText(title:'Traveling Detail', size: 16.sp,clr: AppColors.primary,),
         centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
