@@ -243,7 +243,7 @@ class LandingController extends GetxController {
       if (apiStation.police_station_name == null) continue;
 
       var matchingStation = policeStations.firstWhere(
-            (station) => station.police_station_name?.trim() == apiStation.police_station_name!.trim() && station.status == true,
+            (station) => station.police_station_name == apiStation.police_station_name && station.status == true,
         orElse: () => PoliceStation(police_station_name: 'Unknown', status: false),
       );
 
@@ -278,8 +278,8 @@ class LandingController extends GetxController {
       if(selectedIndex.value == 1){
         addAmbulance(hospitalsApiData.value);
       }else if(selectedIndex.value == 2){
-        addAmbulance(hospitalsApiData.value);
-        addFireTruck(firetruckApiData.value);
+        await addAmbulance(hospitalsApiData.value);
+        await addFireTruck(firetruckApiData.value);
       }
     } on Exception catch (e) {
       Get.log('Sign Up ${e.toString()}');
@@ -292,7 +292,7 @@ class LandingController extends GetxController {
       if (apiStation.police_station_name == null) continue;
 
       var matchingStation = hospitals.firstWhere(
-            (station) => station.name?.trim() == apiStation.police_station_name!.trim() && station.status == true,
+            (station) => station.name == apiStation.police_station_name && station.status == true,
         orElse: () => Hospitals(name: 'Unknown', status: false),
       );
 
@@ -322,7 +322,7 @@ class LandingController extends GetxController {
       if (apiStation.police_station_name == null) continue;
 
       var matchingStation = fireStations.firstWhere(
-            (station) => station.fire_station_name?.trim() == apiStation.police_station_name!.trim() && station.status == true,
+            (station) => station.fire_station_name == apiStation.police_station_name && station.status == true,
         orElse: () => FireStation(fire_station_name: 'Unknown', status: false),
       );
 

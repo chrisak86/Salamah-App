@@ -59,7 +59,6 @@ class WebDashboardController extends GetxController {
         var data = response['data'] as List;
         if(data!=[]){
           policeStations.addAll(data.map((e) => PoliceStation.fromJson(e)).toList());
-          policeStations.removeWhere((e)=>e.status==false);
         }
         update();
       }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){
@@ -81,7 +80,6 @@ class WebDashboardController extends GetxController {
         var data = response['data'] as List;
         if(data!=[]){
           fireStations.addAll(data.map((e) => FireStation.fromJson(e)).toList());
-          fireStations.removeWhere((e)=>e.status==false);
         }
         update();
       }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){
@@ -103,7 +101,7 @@ class WebDashboardController extends GetxController {
         var data = response['data'] as List;
         if(data!=[]){
           hospitals.addAll(data.map((e) => Hospitals.fromJson(e)).toList());
-          hospitals.removeWhere((e)=>e.status==false);
+          print("xxxxxxxxxxx${hospitals.length}");
         }
         update();
       }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){
@@ -193,34 +191,38 @@ class WebDashboardController extends GetxController {
   Future<void> loadHospitals(String collection) async {
     final tempMarkers = <Marker>[];
     for (var data in hospitals) {
-      final icon = await getIconForLocation(collection, data.status ?? true);
-      final marker = Marker(
-        markerId: MarkerId(data.name.toString()),
-        position:   LatLng(data.lat!, data.long!),
-        icon: icon,
-        infoWindow: InfoWindow(
-          title: data.name,
-        ),
-      );
-      tempMarkers.add(marker);
+      if (data.status == true) {
+        final icon = await getIconForLocation(collection, data.status ?? true);
+        final marker = Marker(
+          markerId: MarkerId(data.name.toString()),
+          position: LatLng(data.lat!, data.long!),
+          icon: icon,
+          infoWindow: InfoWindow(
+            title: data.name,
+          ),
+        );
+        tempMarkers.add(marker);
+      }
+      // Update the markers list
+      markers.addAll(tempMarkers);
     }
-    // Update the markers list
-    markers.addAll(tempMarkers);
   }
 
   Future<void> loadFireStation(String collection) async {
     final tempMarkers = <Marker>[];
     for (var data in fireStations) {
-      final icon = await getIconForLocation(collection, data.status ?? true);
-      final marker =Marker(
+      if(data.status==true) {
+        final icon = await getIconForLocation(collection, data.status ?? true);
+        final marker = Marker(
           markerId: MarkerId(data.fire_station_name.toString()),
-          position:  LatLng(data.latitude!, data.longitude!),
-    icon: icon,
-        infoWindow: InfoWindow(
-          title:  data.fire_station_name,
-        ),
-    );
-      tempMarkers.add(marker);
+          position: LatLng(data.latitude!, data.longitude!),
+          icon: icon,
+          infoWindow: InfoWindow(
+            title: data.fire_station_name,
+          ),
+        );
+        tempMarkers.add(marker);
+      }
     }
     // Update the markers list
     markers.addAll(tempMarkers);
@@ -229,16 +231,18 @@ class WebDashboardController extends GetxController {
   Future<void> loadPoliceStation(String collection) async {
     final tempMarkers = <Marker>[];
     for (var data in policeStations) {
-      final icon = await getIconForLocation(collection, data.status ?? true);
-      final marker =Marker(
-        markerId: MarkerId(data.police_station_name.toString()),
-        position:  LatLng(data.latitude!, data.longitude!),
-        icon: icon,
-        infoWindow: InfoWindow(
-          title:  data.police_station_name,
-        ),
-      );
-      tempMarkers.add(marker);
+      if(data.status==true) {
+        final icon = await getIconForLocation(collection, data.status ?? true);
+        final marker = Marker(
+          markerId: MarkerId(data.police_station_name.toString()),
+          position: LatLng(data.latitude!, data.longitude!),
+          icon: icon,
+          infoWindow: InfoWindow(
+            title: data.police_station_name,
+          ),
+        );
+        tempMarkers.add(marker);
+      }
     }
     // Update the markers list
     markers.addAll(tempMarkers);

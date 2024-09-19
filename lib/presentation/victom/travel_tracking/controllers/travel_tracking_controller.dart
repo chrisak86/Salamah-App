@@ -89,7 +89,8 @@ class TravelTrackingController extends GetxController {
       } else {
         List<Tickets> ticketsList = (response["data"] as List).map((ticket) => Tickets.fromJson(ticket)).toList();
         ticketsList.removeWhere((ticket) => ticket.completed == true ||  ticket.cancel==true);
-        tickets = ticketsList.elementAt(0);
+        update();
+        tickets = ticketsList.last;
         if(index.value==1 && tickets?.attend_id!=null ){
           showCustomNotification(Get.context!,tickets!.police_station_name!,tickets!.distance!,tickets!.ETA!);
         }
