@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:salamah/app/config/global_var.dart';
 import 'package:salamah/app/models/tickets.dart';
 import 'package:salamah/app/models/police_officer.dart';
@@ -20,9 +22,38 @@ class RequestsController extends GetxController {
 
   @override
   void onInit() async{
+    getCurrentLocation();
     super.onInit();
     await fetchTicketsStream();
+
   }
+  Future<void> getCurrentLocation() async {
+    await Permission.locationWhenInUse.request();
+
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      print('Location services are disabled. Defaulting to Kuwait City.');
+      return;
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+        print('Location permissions are denied. Defaulting to Kuwait City.');
+        return;
+      }
+    }
+
+    try {
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    } catch (e) {
+      print('Failed to get location: $e. Defaulting to Kuwait City.');
+    } finally {
+
+    }
+  }
+
 
 
   // Stream to fetch tickets assigned to the police stations of the officer

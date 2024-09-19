@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -30,7 +31,8 @@ class TravelTrackingController extends GetxController {
   var selectedIndex = 0.obs;
   Tickets? tickets;
   RxBool noTicket=false.obs;
-  RxBool back=true.obs;
+  RxBool back=true.obs,firstTime=true.obs;
+  Timer? fetchTimer;
 
   @override
   void onInit() async {
@@ -40,7 +42,7 @@ class TravelTrackingController extends GetxController {
     }
     super.onInit();
     await getCustomMarker();
-    await fetchData("ACCIDENT");
+     startFetchingTimer();
   }
 
   void changeSelectedIndex(int index) {
@@ -60,6 +62,23 @@ class TravelTrackingController extends GetxController {
     }
   }
 
+  void startFetchingTimer() {
+    fetchTimer?.cancel();
+    fetchTimer = Timer.periodic(const Duration(seconds: 10), (timer) async {
+      if (tickets==null || tickets?.attend_id == null) {
+        await fetchData("ACCIDENT");
+      } else {
+        timer.cancel();
+      }
+    });
+  }
+
+  @override
+  void onClose() {
+    fetchTimer?.cancel();
+    super.onClose();
+  }
+
   Future<void> fetchData(String type) async {
     var response;
     try {
@@ -71,7 +90,7 @@ class TravelTrackingController extends GetxController {
         List<Tickets> ticketsList = (response["data"] as List).map((ticket) => Tickets.fromJson(ticket)).toList();
         ticketsList.removeWhere((ticket) => ticket.completed == true ||  ticket.cancel==true);
         tickets = ticketsList.elementAt(0);
-        if(index.value==1){
+        if(index.value==1 && tickets?.attend_id!=null ){
           showCustomNotification(Get.context!,tickets!.police_station_name!,tickets!.distance!,tickets!.ETA!);
         }
         update();
@@ -207,14 +226,14 @@ class TravelTrackingController extends GetxController {
   }
 
   Future<void> getCustomMarker() async {
-    customIcon = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(size: Size(15, 15)),
-      'assets/icons/home.png',
-    );
-    icon1 = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(size: Size(15, 15)),
-      'assets/icons/car.png',
-    );
+    // Obtain the device's pixel ratio (helps to adjust icon size)
+    final ImageConfiguration imageConfig = createLocalImageConfiguration(Get.context!);
+
+    customIcon = await BitmapDescriptor.defaultMarkerWithHue(1);
+
+    icon1 = await BitmapDescriptor.defaultMarkerWithHue(1);
+
+    // Make sure to call update() if you're using a state management solution like GetX
     update();
   }
 

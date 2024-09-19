@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:salamah/app/config/app_colors.dart';
@@ -26,9 +27,10 @@ class PoliceTravelTrackingController extends GetxController {
   LatLng? userData;
   var selectedIndex = 0.obs;
   Tickets? tickets;
-
+  Position? position;
   @override
   void onInit() async {
+    position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     tickets=Get.arguments;
     update();
     super.onInit();
@@ -39,10 +41,10 @@ class PoliceTravelTrackingController extends GetxController {
 
   Future<void> fetchData() async {
       if (tickets!=null && tickets?.id!=null) {
-
-        LatLng policeStationLatLng = LatLng(tickets!.police_lat!, tickets!.police_long!);
-        userData = LatLng(tickets!.user_lat!, tickets!.user_long!);
-        LatLng userLatLng = LatLng(tickets!.user_lat!, tickets!.user_long!);
+        LatLng userLatLng;
+        LatLng policeStationLatLng = LatLng(position?.latitude  ?? tickets!.police_lat!, position?.longitude  ??tickets!.police_long!);
+        userData = LatLng(tickets!.user_lat!,tickets!.user_long!);
+         userLatLng = LatLng(tickets!.user_lat!,tickets!.user_long!);
         distance.value = tickets?.distance ?? '';
         eta.value = tickets?.ETA ?? '';
 
@@ -164,14 +166,8 @@ class PoliceTravelTrackingController extends GetxController {
   }
 
   Future<void> getCustomMarker() async {
-    customIcon = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(size: Size(15, 15)),
-      'assets/icons/home.png',
-    );
-    icon1 = await BitmapDescriptor.fromAssetImage(
-      const ImageConfiguration(size: Size(15, 15)),
-      'assets/icons/car.png',
-    );
+    customIcon = await BitmapDescriptor.defaultMarkerWithHue(1);
+    icon1 = await BitmapDescriptor.defaultMarkerWithHue(1);
     update();
   }
 

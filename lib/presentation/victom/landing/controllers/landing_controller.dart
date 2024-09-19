@@ -42,10 +42,11 @@ class LandingController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getCurrentLocation();
-     getPoliceStation();
-     getFireStationStation();
-     getHospitals();
+    getCurrentLocation().then((_) {
+      getPoliceStation();
+      getFireStationStation();
+      getHospitals();
+    });
   }
 
   Future getPoliceStation() async {
@@ -189,15 +190,18 @@ class LandingController extends GetxController {
       currentLocation.value = LatLng(position.latitude, position.longitude);
     } catch (e) {
       print('Failed to get location: $e. Defaulting to Kuwait City.');
-      currentLocation.value = LatLng(29.3759, 47.9774);
+      currentLocation.value = const LatLng(29.3759, 47.9774);
     } finally {
+      // Update the map marker and location
       updateMarker(currentLocation.value);
       isLoading.value = false;
+
       mapController?.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: currentLocation.value, zoom: 14),
       ));
     }
   }
+
 
   void logout()async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

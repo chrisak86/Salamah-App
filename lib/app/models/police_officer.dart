@@ -7,6 +7,8 @@ class PoliceOfficer {
   String? type;
   bool? isOnline;
   bool? isApproved;
+  String? created_at;
+  String? updated_at;
   List<dynamic>? policeStations;
 
 
@@ -19,6 +21,8 @@ class PoliceOfficer {
         this.isApproved,
         this.type,
         this.civilId,
+        this.created_at,
+        this.updated_at,
         this.email,
         this.gender,
         this.policeStations
@@ -32,6 +36,8 @@ class PoliceOfficer {
     type = json['type'];
     civilId = json['civilId'];
     email = json['email'];
+    created_at = json['created_at'];
+    updated_at = json['updated_at'];
     gender = json['gender'];
     policeStations = json['policeStations']!=null ?  json['policeStations'].cast<String>() : [];
   }
@@ -45,6 +51,8 @@ class PoliceOfficer {
     data['type'] = type;
     data['civilId'] = civilId;
     data['email'] = email;
+    data['created_at'] = created_at;
+    data['updated_at'] = updated_at;
     data['gender'] = gender;
     data['policeStations'] = policeStations;
     return data;

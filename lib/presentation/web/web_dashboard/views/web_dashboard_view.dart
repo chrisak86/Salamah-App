@@ -1,3 +1,5 @@
+import 'package:dio_log/http_log_list_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -51,16 +53,25 @@ class WebDashboardView extends GetView<WebDashboardController> {
                                 backgroundImage: NetworkImage('https://via.placeholder.com/150'),
                               ),
                               const SizedBox(width: 8.0),
-                              const Column(
+                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'Salamah',
                                     style: TextStyle(color: AppColors.primary, fontSize: 18),
                                   ),
-                                  Text(
-                                    'Super Admin',
-                                    style: TextStyle(color: AppColors.primary),
+                                  GestureDetector(
+                                    onLongPress: (){
+                                      Navigator.of(Get.context!).push(
+                                        MaterialPageRoute(
+                                          builder: (context) => HttpLogListWidget(),
+                                        ),
+                                      );
+                                    },
+                                    child: Text(
+                                      'Super Admin',
+                                      style: TextStyle(color: AppColors.primary),
+                                    ),
                                   ),
                                 ],
                               ),

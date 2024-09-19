@@ -9,6 +9,8 @@ class UserProfile {
   bool? isOnline;
   bool? isApproved;
   List<dynamic>? policeStations;
+  String? created_at;
+  String? updated_at;
 
   UserProfile(
       {this.user_id,
@@ -18,6 +20,8 @@ class UserProfile {
         this.type,
         this.password,
         this.civilId,
+        this.created_at,
+        this.updated_at,
         this.isOnline,
         this.isApproved,
         this.policeStations
@@ -31,6 +35,8 @@ class UserProfile {
     isApproved = json['is_approved'];
     name = json['first_name'];
     password = json['password'];
+    created_at = json['created_at'];
+    updated_at = json['updated_at'];
     type = json['user_type'];
     civilId = json['civil_id'];
     policeStations = json['police_station']!=null ?  json['police_station'].cast<int>() : [];
@@ -42,6 +48,8 @@ class UserProfile {
     data['gender'] = gender;
     data['email'] = email;
     data['is_approved'] = isApproved;
+    data['created_at'] = created_at;
+    data['updated_at'] = updated_at;
     data['first_name'] = name;
     data['is_online'] = isOnline;
     data['user_type'] = type;

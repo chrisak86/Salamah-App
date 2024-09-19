@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:salamah/app/config/app_colors.dart';
 import 'package:salamah/app/models/user.dart';
 import 'package:salamah/presentation/web/web_dashboard/controllers/web_dashboard_controller.dart';
+import 'package:intl/intl.dart';
 
 class PoliceView extends StatelessWidget {
   final controller = Get.find<WebDashboardController>();
@@ -45,7 +46,15 @@ class PoliceView extends StatelessWidget {
                 Expanded(
                   child: Center(
                     child: Text(
-                      'Police',
+                      'Police Station',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      'Join Date',
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                     ),
                   ),
@@ -159,6 +168,11 @@ class PoliceView extends StatelessWidget {
                               ),
                             ),
                           ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Center(
+                          child: Text(DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.parse(policeOfficer.created_at.toString()))),
                         ),
                       ),
                     ],

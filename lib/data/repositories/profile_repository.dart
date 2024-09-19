@@ -222,7 +222,7 @@ class RequestRepository{
         "type_choice":type
       },
       true,
-      loading: true,
+      loading: false,
       Get.context,
     );
     return data;
@@ -298,7 +298,8 @@ class RequestRepository{
         ApiEndPoints.updateTicketStatus,
         {
           "id": id,
-          "attend_id":Globals.userProfile?.user_id
+          "attend_id":Globals.userProfile?.user_id,
+          "officer_name":Globals.userProfile?.name,
         },
         false,
         Get.context,

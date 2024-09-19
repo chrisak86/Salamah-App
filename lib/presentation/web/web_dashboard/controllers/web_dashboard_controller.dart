@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/get_rx.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:get/get.dart';
 import 'package:salamah/app/models/fire_station.dart';
@@ -25,7 +27,9 @@ class WebDashboardController extends GetxController {
   GoogleMapController? mapController;
 
 
-
+  RxList<Tickets> filteredTickets = <Tickets>[].obs;
+  RxString selectedStatusFilter = 'all'.obs;
+  RxBool isAscending = true.obs;
   RxList<PoliceStation> policeStations=<PoliceStation>[].obs;
   RxList<FireStation> fireStations=<FireStation>[].obs;
   RxList<Hospitals> hospitals=<Hospitals>[].obs;
@@ -42,6 +46,7 @@ class WebDashboardController extends GetxController {
    await getAllOfficers();
    await getAllTickets();
    await getAllPendingTickets();
+   filterAndSortTickets();
     super.onInit();
   }
 
@@ -54,6 +59,7 @@ class WebDashboardController extends GetxController {
         var data = response['data'] as List;
         if(data!=[]){
           policeStations.addAll(data.map((e) => PoliceStation.fromJson(e)).toList());
+          policeStations.removeWhere((e)=>e.status==false);
         }
         update();
       }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){
@@ -75,6 +81,7 @@ class WebDashboardController extends GetxController {
         var data = response['data'] as List;
         if(data!=[]){
           fireStations.addAll(data.map((e) => FireStation.fromJson(e)).toList());
+          fireStations.removeWhere((e)=>e.status==false);
         }
         update();
       }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){
@@ -96,6 +103,7 @@ class WebDashboardController extends GetxController {
         var data = response['data'] as List;
         if(data!=[]){
           hospitals.addAll(data.map((e) => Hospitals.fromJson(e)).toList());
+          hospitals.removeWhere((e)=>e.status==false);
         }
         update();
       }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){
@@ -160,6 +168,9 @@ class WebDashboardController extends GetxController {
         if(data!=[]){
           pendingTicket.addAll(data.map((e) => Tickets.fromJson(e)).toList());
           pendingTicket.removeWhere((element) => element.completed==true || element.cancel==true);
+          if(pendingTicket.isNotEmpty){
+            await loadTickets('pending',);
+          }
         }
         update();
       }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){
@@ -225,6 +236,26 @@ class WebDashboardController extends GetxController {
         icon: icon,
         infoWindow: InfoWindow(
           title:  data.police_station_name,
+        ),
+      );
+      tempMarkers.add(marker);
+    }
+    // Update the markers list
+    markers.addAll(tempMarkers);
+  }
+
+  Future<void> loadTickets(String collection) async {
+    final tempMarkers = <Marker>[];
+    for (var data in pendingTicket) {
+      final icon = BitmapDescriptor.defaultMarkerWithHue(1);
+      final marker =Marker(
+        markerId: MarkerId(data.user_name.toString()),
+        position:  LatLng(data.user_lat!, data.user_long!),
+        icon: icon,
+        infoWindow: InfoWindow(
+          title:  data.user_name,
+          snippet: 'Police Station: ${data.police_station_name}\nGender: ${data.gender}\nAttendee: ${data.officer_name ?? "No Attendee"}\nDistance : ${data.distance}\nEstimate : ${data.ETA}',
+
         ),
       );
       tempMarkers.add(marker);
@@ -352,7 +383,10 @@ class WebDashboardController extends GetxController {
       case 'fire_station':
         assetPath = status ? 'assets/icons/amb.png' : 'assets/icons/dos_fir.png';
         break;
-      default:
+       case 'pending':
+        assetPath = 'assets/icons/home.png';
+        break;
+       default:
         assetPath = 'assets/icons/default_icon.png';
     }
 
@@ -401,7 +435,25 @@ class WebDashboardController extends GetxController {
   }
 
 
+  void filterAndSortTickets() {
+    var filteredList = allTicket.where((ticket) {
+      if (selectedStatusFilter.value == 'completed') {
+        return ticket.completed == true;
+      } else if (selectedStatusFilter.value == 'cancelled') {
+        return ticket.cancel == true;
+      } else if (selectedStatusFilter.value == 'open') {
+        return ticket.completed == false && ticket.cancel == null;
+      }
+      return true;
+    }).toList();
 
+    // Sort tickets by id
+    filteredList.sort((a, b) => isAscending.value
+        ? a.id!.compareTo(b.id as num)
+        : b.id!.compareTo(a.id as num));
+
+    filteredTickets.value = filteredList;
+  }
 
 
 }
