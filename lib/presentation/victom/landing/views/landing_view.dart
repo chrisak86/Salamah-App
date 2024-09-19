@@ -95,7 +95,7 @@ class LandingView extends GetView<LandingController> {
                 ? const Center(child: CircularProgressIndicator())
                 : GoogleMap(
               compassEnabled: false,
-              mapToolbarEnabled: true,
+              mapToolbarEnabled: false,
               initialCameraPosition: CameraPosition(
                 target: controller.currentLocation.value,
                 zoom: 14,

@@ -30,7 +30,7 @@ class PoliceTravelTrackingView extends GetView<PoliceTravelTrackingController> {
                 polylines: Set<Polyline>.of(controller.polylines),
                 markers: Set<Marker>.of(controller.markers),
                 // tileOverlays: c.tileOverlays,
-                mapToolbarEnabled: true,
+                mapToolbarEnabled: false,
                 onMapCreated: (GoogleMapController mController) {
                   controller.mapController = mController;
                   controller.update();
