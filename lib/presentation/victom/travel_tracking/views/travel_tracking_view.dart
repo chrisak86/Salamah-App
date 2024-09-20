@@ -125,9 +125,8 @@ class TravelTrackingView extends GetView<TravelTrackingController> {
             Expanded(
               child:  Obx(() {
                 return GoogleMap(
-                  compassEnabled: Platform.isAndroid ? false : false,
-                  zoomControlsEnabled: false,
-                  myLocationEnabled: false,
+                  compassEnabled: false,
+                  myLocationButtonEnabled: false,
                   mapType: MapType.normal,
                   polylines: Set<Polyline>.of(controller.polylines),
                   markers: Set<Marker>.of(controller.markers),

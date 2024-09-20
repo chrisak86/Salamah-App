@@ -28,9 +28,10 @@ class PoliceTravelTrackingView extends GetView<PoliceTravelTrackingController> {
           Expanded(
             child: Obx(() {
               return GoogleMap(
-                compassEnabled: Platform.isAndroid ? false : false,
-                zoomControlsEnabled: false,
+                compassEnabled:  false,
+
                 myLocationButtonEnabled: false,
+
                 mapType: MapType.normal,
                 polylines: Set<Polyline>.of(controller.polylines),
                 markers: Set<Marker>.of(controller.markers),
