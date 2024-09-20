@@ -7,7 +7,7 @@ import 'package:salamah/app/config/global_var.dart';
 import 'package:salamah/app/shared_widgets/custom_button.dart';
 import 'package:salamah/presentation/victom/travel_tracking/controllers/travel_tracking_controller.dart';
 import 'package:sizer/sizer.dart';
-
+import 'dart:io' show Platform;
 import '../../../../app/shared_widgets/Text.dart';
 
 class TravelTrackingView extends GetView<TravelTrackingController> {
@@ -125,7 +125,7 @@ class TravelTrackingView extends GetView<TravelTrackingController> {
             Expanded(
               child:  Obx(() {
                 return GoogleMap(
-                  compassEnabled: false,
+                  compassEnabled: Platform.isAndroid ? false : false,
                   zoomControlsEnabled: false,
                   myLocationEnabled: false,
                   mapType: MapType.normal,

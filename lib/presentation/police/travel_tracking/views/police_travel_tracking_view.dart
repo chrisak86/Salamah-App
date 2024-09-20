@@ -7,6 +7,7 @@ import 'package:salamah/presentation/victom/travel_tracking/controllers/travel_t
 import 'package:sizer/sizer.dart';
 
 import '../../../../app/shared_widgets/Text.dart';
+import 'dart:io' show Platform;
 
 class PoliceTravelTrackingView extends GetView<PoliceTravelTrackingController> {
   const PoliceTravelTrackingView({Key? key}) : super(key: key);
@@ -27,7 +28,7 @@ class PoliceTravelTrackingView extends GetView<PoliceTravelTrackingController> {
           Expanded(
             child: Obx(() {
               return GoogleMap(
-                compassEnabled: false,
+                compassEnabled: Platform.isAndroid ? false : false,
                 zoomControlsEnabled: false,
                 myLocationButtonEnabled: false,
                 mapType: MapType.normal,
