@@ -14,15 +14,15 @@ class PoliceTravelTrackingView extends GetView<PoliceTravelTrackingController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Obx(() => Scaffold(
       appBar: AppBar(
         title:  MyText(title:'Traveling Detail', size: 16.sp,clr: AppColors.primary,),
         centerTitle: true,
       ),
       body: controller.isLoaded.isTrue ?
-          const Center(
-            child: CircularProgressIndicator(),
-          ):
+      const Center(
+        child: CircularProgressIndicator(),
+      ):
       Column(
         children: [
           Expanded(
@@ -71,6 +71,6 @@ class PoliceTravelTrackingView extends GetView<PoliceTravelTrackingController> {
           ),
         ],
       ),
-    );
+    ));
   }
 }
