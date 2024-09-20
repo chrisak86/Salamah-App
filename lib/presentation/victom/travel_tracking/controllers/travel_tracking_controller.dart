@@ -14,6 +14,7 @@ import 'package:salamah/app/routes/app_pages.dart';
 import 'package:salamah/app/shared_widgets/Text.dart';
 import 'package:salamah/app/utils/utils.dart';
 import 'package:salamah/data/repositories/profile_repository.dart';
+import 'package:salamah/presentation/victom/landing/controllers/landing_controller.dart';
 
 class TravelTrackingController extends GetxController {
 
@@ -65,7 +66,7 @@ class TravelTrackingController extends GetxController {
   void startFetchingTimer() {
     fetchTimer?.cancel();
     fetchTimer = Timer.periodic(const Duration(seconds: 10), (timer) async {
-      if (tickets==null || tickets?.attend_id == null) {
+      if (tickets==null || tickets?.attend_id == null || tickets?.completed==false) {
         await fetchData("ACCIDENT");
       } else {
         timer.cancel();
@@ -136,6 +137,10 @@ class TravelTrackingController extends GetxController {
         //     CameraUpdate.newLatLngBounds(bounds, 50),
         //   );
         // }
+      }
+      else{
+        Get.offAndToNamed(Routes.LANDING);
+        Get.find<LandingController>().initialData();
       }
     } catch (e) {
       print('Error fetching data: $e');
@@ -286,6 +291,7 @@ class TravelTrackingController extends GetxController {
         Utils.showToast(message: "This is cancelled");
         if(index.value==1){
           Get.offAndToNamed(Routes.LANDING);
+          Get.find<LandingController>().initialData();
         }
         update();
       }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){

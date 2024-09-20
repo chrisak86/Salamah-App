@@ -28,6 +28,7 @@ class PoliceTravelTrackingController extends GetxController {
   var selectedIndex = 0.obs;
   Tickets? tickets;
   Position? position;
+  RxBool isLoaded=true.obs;
   @override
   void onInit() async {
     position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
@@ -36,6 +37,7 @@ class PoliceTravelTrackingController extends GetxController {
     super.onInit();
     await getCustomMarker();
     await fetchData();
+    isLoaded.value=false;
   }
 
 

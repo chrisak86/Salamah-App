@@ -42,6 +42,9 @@ class LandingController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    initialData();
+  }
+  initialData(){
     getCurrentLocation().then((_) {
       getPoliceStation();
       getFireStationStation();

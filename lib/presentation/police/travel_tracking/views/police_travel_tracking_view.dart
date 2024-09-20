@@ -18,14 +18,18 @@ class PoliceTravelTrackingView extends GetView<PoliceTravelTrackingController> {
         title:  MyText(title:'Traveling Detail', size: 16.sp,clr: AppColors.primary,),
         centerTitle: true,
       ),
-      body: Column(
+      body: controller.isLoaded.isTrue ?
+          const Center(
+            child: CircularProgressIndicator(),
+          ):
+      Column(
         children: [
           Expanded(
             child: Obx(() {
               return GoogleMap(
                 compassEnabled: false,
                 zoomControlsEnabled: false,
-                myLocationEnabled: false,
+                myLocationButtonEnabled: false,
                 mapType: MapType.normal,
                 polylines: Set<Polyline>.of(controller.polylines),
                 markers: Set<Marker>.of(controller.markers),
