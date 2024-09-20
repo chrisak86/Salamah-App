@@ -32,6 +32,7 @@ class TravelTrackingController extends GetxController {
   var selectedIndex = 0.obs;
   Tickets? tickets;
   RxBool noTicket=false.obs;
+  RxBool first=false.obs;
   RxBool back=true.obs,firstTime=true.obs;
   Timer? fetchTimer;
 
@@ -65,7 +66,7 @@ class TravelTrackingController extends GetxController {
 
   void startFetchingTimer() {
     fetchTimer?.cancel();
-    fetchTimer = Timer.periodic(const Duration(seconds: 10), (timer) async {
+    fetchTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
       if (tickets==null || tickets?.attend_id == null || tickets?.completed==false) {
         await fetchData("ACCIDENT");
       } else {
@@ -86,13 +87,22 @@ class TravelTrackingController extends GetxController {
       response = await requestRepository.getUserTicket(type: type);
       if (response != null && response["data"] != null && (response["data"] as List).isEmpty) {
         noTicket.value = true;
+        Get.offAndToNamed(Routes.LANDING);
+        Get.find<LandingController>().initialData();
         update();
       } else {
         List<Tickets> ticketsList = (response["data"] as List).map((ticket) => Tickets.fromJson(ticket)).toList();
         ticketsList.removeWhere((ticket) => ticket.completed == true ||  ticket.cancel==true);
         update();
-        tickets = ticketsList.last;
-        if(index.value==1 && tickets?.attend_id!=null ){
+        if(ticketsList.isEmpty){
+          Get.offAndToNamed(Routes.LANDING);
+          Get.find<LandingController>().initialData();
+          Utils.showToast(message: "Your request is completed");
+        }else{
+          tickets = ticketsList.last;
+        }
+        if(index.value==1 && tickets?.attend_id!=null && first.isFalse ){
+          first.value=true;
           showCustomNotification(Get.context!,tickets!.police_station_name!,tickets!.distance!,tickets!.ETA!);
         }
         update();
@@ -137,10 +147,6 @@ class TravelTrackingController extends GetxController {
         //     CameraUpdate.newLatLngBounds(bounds, 50),
         //   );
         // }
-      }
-      else{
-        Get.offAndToNamed(Routes.LANDING);
-        Get.find<LandingController>().initialData();
       }
     } catch (e) {
       print('Error fetching data: $e');
@@ -291,7 +297,6 @@ class TravelTrackingController extends GetxController {
         Utils.showToast(message: "This is cancelled");
         if(index.value==1){
           Get.offAndToNamed(Routes.LANDING);
-          Get.find<LandingController>().initialData();
         }
         update();
       }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){
