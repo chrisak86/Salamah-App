@@ -100,6 +100,12 @@ class TravelTrackingController extends GetxController {
           Utils.showToast(message: "Your request is completed");
         }else{
           tickets = ticketsList.last;
+          if(tickets?.cancel==true){
+            noTicket.value = true;
+            Get.offAndToNamed(Routes.LANDING);
+            Get.find<LandingController>().initialData();
+            update();
+          }
         }
         if(index.value==1 && tickets?.attend_id!=null && first.isFalse ){
           first.value=true;
