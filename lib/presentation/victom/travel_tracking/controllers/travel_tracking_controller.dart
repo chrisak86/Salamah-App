@@ -296,24 +296,96 @@ class TravelTrackingController extends GetxController {
   Future<void> updateTicketStatus(String inputText) async {
     var response;
     try {
-      response = await requestRepository.cancelTicketStatus(id: tickets?.id,reason:inputText);
-      if (response != null && response['success']==true) {
-        tickets=Tickets.fromJson(response['data']);
+      response = await requestRepository.cancelTicketStatus(id: tickets?.id, reason: inputText);
+      if (response != null && response['success'] == true) {
+        tickets = Tickets.fromJson(response['data']);
         update();
         Utils.showToast(message: "This is cancelled");
-        if(index.value==1){
-          Get.offAndToNamed(Routes.LANDING);
+        Get.offAndToNamed(Routes.LANDING);
+        fetchTimer?.cancel();
+        if(back.isTrue) {
+          Get.find<LandingController>().initialData();
         }
+        switch (selectedIndex.value) {
+          case 0:
+            if(index.value==3) {
+              await cancelTicketsByType("AMBULANCE");
+              await cancelTicketsByType("FIRETRUCK");
+            }else  if(index.value==2) {
+              await cancelTicketsByType("AMBULANCE");
+            }
+            break;
+          case 1:
+            if(index.value==3) {
+              await cancelTicketsByType("ACCIDENT");
+              await cancelTicketsByType("FIRETRUCK");
+            }else  if(index.value==2) {
+              await cancelTicketsByType("ACCIDENT");
+            }
+            break;
+          case 2:
+              await cancelTicketsByType("ACCIDENT");
+              await cancelTicketsByType("AMBULANCE");
+            break;
+        }
+
         update();
-      }else if(response != null && response['success']==false &&response['message']=='Invalid page.' ){
+      } else if (response != null && response['success'] == false && response['message'] == 'Invalid page.') {
         update();
-      }else{
+      } else {
         update();
       }
     } on Exception catch (e) {
       Get.log('Sign Up ${e.toString()}');
     }
   }
+  Future<void> cancelTicketsByType(String type) async {
+    var response;
+    try {
+      response = await requestRepository.getUserTicket(type: type);
+      if (response != null && response["data"] != null && (response["data"] as List).isEmpty) {
+        noTicket.value = true;
+        update();
+      } else {
+        List<Tickets> ticketsList = (response["data"] as List).map((ticket) => Tickets.fromJson(ticket)).toList();
+        ticketsList.removeWhere((ticket) => ticket.completed == true ||  ticket.cancel==true);
+        update();
+        if(ticketsList.isEmpty){
+        }else{
+          tickets = ticketsList.last;
+          if(tickets?.cancel==true){
+          }else{
+            cancelAllOther();
+          }
+        }
+        if(index.value==1 && tickets?.attend_id!=null && first.isFalse ){
+          first.value=true;
+          showCustomNotification(Get.context!,tickets!.police_station_name!,tickets!.distance!,tickets!.ETA!);
+        }
+        update();
+      }
+    } catch (e) {
+      print('Error cancelling $type tickets: $e');
+    }
+  }
+
+  Future<void> cancelAllOther() async {
+    var response;
+    try {
+      response = await requestRepository.cancelTicketStatus(id: tickets?.id, reason: "");
+      if (response != null && response['success'] == true) {
+        update();
+      } else if (response != null && response['success'] == false && response['message'] == 'Invalid page.') {
+        update();
+      } else {
+        update();
+      }
+    } on Exception catch (e) {
+      Get.log('Sign Up ${e.toString()}');
+    }
+  }
+
+
 
   void showCustomNotification(BuildContext context, String policeStation, String distance, String eta) {
     showDialog(
