@@ -89,6 +89,7 @@ class TravelTrackingController extends GetxController {
         noTicket.value = true;
         Get.offAndToNamed(Routes.LANDING);
         Get.find<LandingController>().initialData();
+        completeAllTicket();
         update();
       } else {
         List<Tickets> ticketsList = (response["data"] as List).map((ticket) => Tickets.fromJson(ticket)).toList();
@@ -98,6 +99,7 @@ class TravelTrackingController extends GetxController {
           Get.offAndToNamed(Routes.LANDING);
           Get.find<LandingController>().initialData();
           Utils.showToast(message: "Your request is completed");
+          completeAllTicket();
         }else{
           tickets = ticketsList.last;
           if(tickets?.cancel==true){
@@ -369,10 +371,76 @@ class TravelTrackingController extends GetxController {
     }
   }
 
+  Future<void> completeAllTicket() async {
+        switch (selectedIndex.value) {
+          case 0:
+            if(index.value==3) {
+              await completeAllTicketByType("AMBULANCE");
+              await completeAllTicketByType("FIRETRUCK");
+            }else  if(index.value==2) {
+              await completeAllTicketByType("AMBULANCE");
+            }
+            break;
+          case 1:
+            if(index.value==3) {
+              await completeAllTicketByType("ACCIDENT");
+              await completeAllTicketByType("FIRETRUCK");
+            }else  if(index.value==2) {
+              await completeAllTicketByType("ACCIDENT");
+            }
+            break;
+          case 2:
+            await completeAllTicketByType("ACCIDENT");
+            await completeAllTicketByType("AMBULANCE");
+            break;
+        }
+  }
+  Future<void> completeAllTicketByType(String type) async {
+    var response;
+    try {
+      response = await requestRepository.getUserTicket(type: type);
+      if (response != null && response["data"] != null && (response["data"] as List).isEmpty) {
+        noTicket.value = true;
+        update();
+      } else {
+        List<Tickets> ticketsList = (response["data"] as List).map((ticket) => Tickets.fromJson(ticket)).toList();
+        ticketsList.removeWhere((ticket) => ticket.completed == true ||  ticket.cancel==true);
+        update();
+        if(ticketsList.isEmpty){
+        }else{
+          tickets = ticketsList.last;
+          if(tickets?.completed==true || tickets?.cancel==true ){
+          }else{
+            completeAllOther();
+          }
+        }
+        update();
+      }
+    } catch (e) {
+      print('Error cancelling $type tickets: $e');
+    }
+  }
+
   Future<void> cancelAllOther() async {
     var response;
     try {
       response = await requestRepository.cancelTicketStatus(id: tickets?.id, reason: "");
+      if (response != null && response['success'] == true) {
+        update();
+      } else if (response != null && response['success'] == false && response['message'] == 'Invalid page.') {
+        update();
+      } else {
+        update();
+      }
+    } on Exception catch (e) {
+      Get.log('Sign Up ${e.toString()}');
+    }
+  }
+
+  Future<void> completeAllOther() async {
+    var response;
+    try {
+      response = await requestRepository.updateTicketStatus(id: tickets?.id);
       if (response != null && response['success'] == true) {
         update();
       } else if (response != null && response['success'] == false && response['message'] == 'Invalid page.') {
